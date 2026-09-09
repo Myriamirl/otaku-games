@@ -1,130 +1,176 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Otaku Games — Trouve l'infiltré</title>
-<meta name="description" content="Un jeu de mots et de bluff entre otakus. Crée une partie, partage le code, démasquez l'infiltré." />
-
-<!-- Content-Security-Policy : limite les sources de scripts/styles/polices.
-     Renforce à ajuster côté serveur (en-tête HTTP) une fois en ligne. -->
-<meta http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self';" />
-<meta http-equiv="X-Content-Type-Options" content="nosniff" />
-<meta name="referrer" content="same-origin" />
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Yuji+Syuku&family=Work+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Otak's Games</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style/style.css">
 </head>
-<body data-page="accueil">
+<body>
 
-<div class="shell">
-
-  <header class="top-bar">
-    <a class="brand" href="index.html">
-      <svg class="brand-mark" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <circle cx="20" cy="20" r="17" stroke="#e2601f" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="88 20"/>
-      </svg>
-      <span class="brand-name">Otaku Games</span>
-    </a>
-    <span class="status-pill">
-      <span class="status-dot" aria-hidden="true"></span>
-      <span id="online-count">0</span> joueur(s) en ligne
-    </span>
-  </header>
-
-  <main>
-    <section class="hero">
-      <div class="hero-copy">
-        <p class="hero-eyebrow-free">Gratuit — 3 à 12 joueurs</p>
-        <h1>Un mot commun. Un infiltré. Un seul vote.</h1>
-        <p class="hero-lede">
-          Chaque joueur reçoit un mot. Celui de l'espion est presque le même —
-          mais pas tout à fait. Donnez des indices, débattez, puis votez pour
-          démasquer l'infiltré avant qu'il ne prenne votre place.
-        </p>
-        <div class="hero-actions">
-          <a class="btn btn-primary" href="create-room.html">Créer une partie</a>
-          <a class="btn btn-outline" href="join-room.html">Rejoindre avec un code</a>
+    <!-- ENTÊTE / NAVBAR -->
+    <header class="navbar">
+        <div class="logo-container">
+            <svg class="konoha-logo" viewBox="0 0 100 100">
+                <path d="M50 10 C 25 10, 10 25, 10 50 C 10 75, 25 90, 50 90 C 75 90, 90 75, 90 50 C 90 35, 80 25, 70 20 C 60 15, 45 20, 40 30 C 35 40, 40 55, 50 60 C 60 65, 70 58, 68 48 C 66 38, 52 38, 50 48" fill="none" stroke="#e05328" stroke-width="8" stroke-linecap="round"/>
+                <path d="M75 15 L 90 5" stroke="#e05328" stroke-width="8" stroke-linecap="round"/>
+            </svg>
+            <span class="logo-text">Otak’s Games</span>
         </div>
-        <div class="hero-facts">
-          <div class="hero-fact">
-            <strong>3–12</strong>
-            <span>joueurs par partie</span>
-          </div>
-          <div class="hero-fact">
-            <strong>2</strong>
-            <span>camps : ninjas et espion</span>
-          </div>
-          <div class="hero-fact">
-            <strong>Naruto</strong>
-            <span>premier thème de mots</span>
-          </div>
+
+        <nav class="nav-links">
+            <a href="#" class="nav-item active">Accueil</a>
+            <a href="#" class="nav-item"><i class="fa-solid fa-crown"></i> Leaderbord</a>
+            <a href="#" class="nav-item"><i class="fa-solid fa-user"></i> Mon compte</a>
+        </nav>
+
+        <div class="nav-actions">
+            <button class="search-btn" aria-label="Rechercher"><i class="fa-solid fa-magnifying-glass"></i></button>
+            <button class="btn-connexion"><i class="fa-solid fa-right-to-bracket"></i> Connexion</button>
         </div>
-      </div>
+    </header>
 
-      <div class="hero-visual" aria-hidden="true">
-        <svg viewBox="0 0 320 320" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="160" cy="160" r="130" stroke="#3a2e23" stroke-width="1.5"/>
-          <path d="M160 30 C 220 45, 275 100, 290 160 C 275 220, 220 275, 160 290"
-                stroke="#e2601f" stroke-width="3" stroke-linecap="round" fill="none" opacity="0.85"/>
-          <path d="M160 290 C 100 275, 45 220, 30 160 C 45 100, 100 45, 160 30"
-                stroke="#8e2a2a" stroke-width="3" stroke-linecap="round" fill="none" opacity="0.6"/>
-          <circle cx="160" cy="160" r="4" fill="#f3e8d6"/>
-        </svg>
-      </div>
-    </section>
+    <!-- BANNIÈRE HERO DE KONOHA -->
+<section class="hero-banner">
+    <svg class="wave-svg" viewBox="0 0 1200 480" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <!-- Masque avec vagues -->
+            <clipPath id="waveClip">
+                <path d="
+    M0,8 
+    C120,22 240,2 360,15 
+    C480,28 600,3 720,12 
+    C840,21 960,5 1080,16 
+    C1140,22 1170,10 1200,8 
+    L1200,472
+    C1170,465 1140,475 1080,468 
+    C960,460 840,474 720,465 
+    C600,456 480,470 360,462 
+    C240,454 120,466 0,472 
+    Z
+                "/>
+            </clipPath>
+        </defs>
+        <!-- Image avec le masque -->
+        <image href="asset\logo_avatar\banniere_naruto.jpg" width="1200" height="480" preserveAspectRatio="xMidYMid slice" clip-path="url(#waveClip)"/>
+    </svg>
+</section>
 
-    <section class="two-col">
-      <div class="panel">
-        <div class="panel-header">
-          <h2 class="panel-title">Comment ça se joue</h2>
+    <!-- SECTION NOS JEUX -->
+    <main class="games-section">
+        <div class="section-title-container">
+            <svg class="konoha-icon" viewBox="0 0 100 100">
+                <path d="M50 10 C 25 10, 10 25, 10 50 C 10 75, 25 90, 50 90 C 75 90, 90 75, 90 50 C 90 35, 80 25, 70 20 C 60 15, 45 20, 40 30 C 35 40, 40 55, 50 60 C 60 65, 70 58, 68 48 C 66 38, 52 38, 50 48" fill="none" stroke="#e05328" stroke-width="8" stroke-linecap="round"/>
+            </svg>
+            <h2>NOS JEUX</h2>
         </div>
-        <p style="margin-bottom:14px">Chaque manche se joue en trois temps.</p>
-        <div class="stack" style="gap:14px">
-          <div>
-            <strong style="color:var(--ink)">Indice</strong>
-            <p>Chacun son tour, un mot ou une courte phrase pour prouver qu'on connaît le mot commun — sans le dire.</p>
-          </div>
-          <div>
-            <strong style="color:var(--ink)">Débat</strong>
-            <p>On compare les indices, on repère les incohérences, on se fait des théories.</p>
-          </div>
-          <div>
-            <strong style="color:var(--ink)">Vote</strong>
-            <p>Tout le monde désigne un suspect. Le plus voté est éliminé et son rôle est révélé.</p>
-          </div>
+
+        <div class="games-grid">
+
+            <!-- Carte 1 : UNDERCOVER -->
+            <div class="game-card">
+                <div class="card-img-wrapper">
+                    <img src="asset\logo_avatar\logo_undercover.jpg" alt="Undercover" class="game-img">
+                    <div class="card-badge" style="background-color: #e05328;">
+                        <i class="fa-solid fa-mask"></i>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <h3>UNDERCOVER</h3>
+                    <p>Sauras-tu démasquer le traître?</p>
+                    <button class="btn-card">Jouer <i class="fa-solid fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <!-- Carte 2 : ENCHÈRES -->
+            <div class="game-card">
+                <div class="card-img-wrapper">
+                    <img src="asset\logo_avatar\logo_enchere.jpg" alt="Enchères" class="game-img">
+                    <div class="card-badge" style="background-color: #2c7a4a;">
+                        <i class="fa-solid fa-gavel"></i>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <h3>ENCHÈRES</h3>
+                    <p>Mise sur tes objets préférés et fais la meilleure offre !</p>
+                    <button class="btn-card">Jouer <i class="fa-solid fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <!-- Carte 3 : COMBAT / ARÈNE -->
+            <div class="game-card">
+                <div class="card-img-wrapper">
+                    <img src="asset\logo_avatar\logo_combat.jpg" alt="Combat / Arène" class="game-img">
+                    <div class="card-badge" style="background-color: #b84a2c;">
+                        <i class="fa-solid fa-crosshairs"></i> 
+                    </div>
+                </div>
+                <div class="card-content">
+                    <h3>COMBAT / ARÈNE</h3>
+                    <p>Affronte d'autres joueurs et grimpe dans le classement !</p>
+                    <button class="btn-card">Jouer <i class="fa-solid fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <!-- Carte 4 : RPG / AVENTURE -->
+            <div class="game-card">
+                <div class="card-img-wrapper">
+                    <img src="asset\logo_avatar\logo_rpg_aventure.jpg" alt="RPG / Aventure" class="game-img">
+                    <div class="card-badge" style="background-color: #2a6b8c;">
+                        <i class="fa-solid fa-compass"></i>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <h3>RPG / AVENTURE</h3>
+                    <p>Explore Konoha et découvre de nouvelles quêtes !</p>
+                    <button class="btn-card">Découvrir <i class="fa-solid fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <!-- Carte 5 : COLLECTION -->
+            <div class="game-card">
+                <div class="card-img-wrapper">
+                    <img src="asset\logo_avatar\logo_collection.jpg" alt="Collection" class="game-img">
+                    <div class="card-badge" style="background-color: #8a6a2c;">
+                        <i class="fa-solid fa-layer-group"></i> 
+                    </div>
+                </div>
+                <div class="card-content">
+                    <h3>COLLECTION</h3>
+                    <p>Collectionne tes personnages, objets et raretés !</p>
+                    <button class="btn-card">Voir la collection <i class="fa-solid fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <!-- Carte 6 : MINI-JEUX -->
+            <div class="game-card">
+                <div class="card-img-wrapper">
+                    <img src="asset\logo_avatar\logo_minijeux.jpg" alt="Mini-Jeux" class="game-img">
+                    <div class="card-badge" style="background-color: #6a3a8a;">
+                        <i class="fa-solid fa-gamepad"></i>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <h3>MINI-JEUX</h3>
+                    <p>Des jeux rapides pour gagner des récompenses !</p>
+                    <button class="btn-card">Jouer <i class="fa-solid fa-arrow-right"></i></button>
+                </div>
+            </div>
+
         </div>
-      </div>
+    </main>
 
-      <div class="panel">
-        <div class="panel-header">
-          <h2 class="panel-title">Deux modes de jeu</h2>
+    <script src="script/script.js"></script>
+
+        <!-- ===== PIED DE PAGE ===== -->
+    <footer class="footer">
+        <div class="footer-bottom">
+            <p>&copy; 2026 Otak's Games. Tous droits réservés. | Conçu avec <i class="fa-solid fa-heart" style="color: #e05328;"></i> pour la communauté Ehpad No Sekai.</p>
         </div>
-        <div class="stack" style="gap:18px">
-          <div>
-            <span class="pill pill-accent">Original</span>
-            <p style="margin-top:10px">La manche se termine dès qu'un espion tombe, ou dès qu'un ninja tombe. Rapide et nerveux.</p>
-          </div>
-          <div>
-            <span class="pill pill-deep">Elimination</span>
-            <p style="margin-top:10px">Les ninjas doivent démasquer tous les espions pour gagner. Plus long, plus stratégique.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer class="site-footer">
-    <span>Otaku Games — jeu entre amis, hors ligne comme en ligne.</span>
-    <span>Thème de mots : Naruto</span>
-  </footer>
-
-</div>
-
-<script src="assets/js/app.js"></script>
-<script src="assets/js/pages/accueil.js"></script>
+    </footer>
 </body>
 </html>

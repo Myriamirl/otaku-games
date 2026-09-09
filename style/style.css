@@ -1,0 +1,376 @@
+/* VARIABLES ET RESET */
+:root {
+    --bg-sand: #cba87c;
+    --card-bg: #fffbf2;
+    --primary-orange: #e05328;
+    --text-dark: #2c221e;
+    --text-muted: #736357;
+    --font-heading: 'Playfair Display', Georgia, serif;
+    --font-body: 'Poppins', sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-sand);
+    font-family: var(--font-body);
+    color: var(--text-dark);
+    min-height: 100vh;
+    padding-bottom: 0;
+}
+
+/* NAVBAR */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 40px;
+    background-color: transparent;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.konoha-logo {
+    width: 36px;
+    height: 36px;
+}
+
+.logo-text {
+    font-family: var(--font-heading);
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text-dark);
+    letter-spacing: -0.5px;
+}
+
+.nav-links {
+    display: flex;
+    gap: 45px;
+    align-items: center;
+}
+
+.nav-item {
+    text-decoration: none;
+    color: var(--text-dark);
+    font-weight: 600;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+    padding-bottom: 4px;
+    transition: color 0.2s ease;
+}
+
+.nav-item.active {
+    color: var(--primary-orange);
+}
+
+.nav-item.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: var(--primary-orange);
+    border-radius: 2px;
+}
+
+.nav-item:hover {
+    color: var(--primary-orange);
+}
+
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.search-btn {
+    background: none;
+    border: none;
+    font-size: 18px;
+    color: var(--text-dark);
+    cursor: pointer;
+}
+
+.btn-connexion {
+    background-color: var(--primary-orange);
+    color: #fff;
+    border: none;
+    padding: 10px 22px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 10px rgba(224, 83, 40, 0.3);
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+.btn-connexion:hover {
+    background-color: #c9441d;
+    transform: translateY(-2px);
+}
+
+/* BANNIÈRE HERO */
+.hero-banner {
+    width: 100%;
+    max-height: 480px;
+    overflow: hidden;
+    position: relative;
+
+}
+.wave-svg {
+    width: 100%;
+    height: auto;
+    max-height: 480px;
+    display: block;
+}
+
+.hero-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    background-color: #d1b48c;
+}
+
+/* SECTION JEUX */
+.games-section {
+    max-width: 1300px;
+    margin: 20px auto 0;
+    padding: 0 20px;
+    flex : 1;
+}
+
+.section-title-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 25px;
+}
+
+.konoha-icon {
+    width: 32px;
+    height: 32px;
+}
+
+.section-title-container h2 {
+    font-family: var(--font-heading);
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--text-dark);
+    letter-spacing: 1px;
+}
+
+/* GRILLE DES CARTES */
+.games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 18px;
+}
+
+.game-card {
+    background-color: var(--card-bg);
+    border-radius: 16px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.game-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.12);
+}
+
+/* ===== CORRECTION IMPORTANTE : les badges ===== */
+.card-img-wrapper {
+    position: relative;
+    width: 100%;
+    height: 140px;
+    border-radius: 12px;
+    overflow: visible; /* Permet au badge de dépasser */
+    background-color: #e2d2bd;
+}
+
+.game-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+.card-badge {
+    position: absolute;
+    bottom: -12px;
+    left: 12px;
+    width: 36px;
+    height: 36px;
+    background-color: var(--text-dark);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid var(--card-bg);
+    font-size: 14px;
+    z-index: 2;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.card-content {
+    margin-top: 22px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    justify-content: space-between;
+}
+
+.card-content h3 {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--text-dark);
+    margin-bottom: 6px;
+}
+
+.card-content p {
+    font-size: 11px;
+    color: var(--text-muted);
+    line-height: 1.4;
+    margin-bottom: 15px;
+}
+
+.btn-card {
+    width: 100%;
+    padding: 8px 0;
+    background-color: transparent;
+    border: 1px solid #dcd0be;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 12px;
+    color: var(--text-dark);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+}
+
+.btn-card:hover {
+    background-color: var(--primary-orange);
+    color: #fff;
+    border-color: var(--primary-orange);
+}
+
+/* ===== PIED DE PAGE ===== */
+.footer {
+    margin-top: 20px;
+    padding: 20px 0;  /* ← AJOUTÉ : donne de l'espace au footer */
+    border-top: 3px solid var(--primary-orange);
+    background-color: var(--bg-sand);  /* ← AJOUTÉ : même couleur que le fond */
+    width: 100%;  /* ← AJOUTÉ : s'assure qu'il prend toute la largeur */
+}
+
+.footer-bottom {
+    text-align: center;
+    max-width: 1300px;  /* ← AJOUTÉ : aligné avec le reste du site */
+    margin: 0 auto;  /* ← AJOUTÉ : centré */
+    padding: 0 20px;  /* ← AJOUTÉ : un peu de padding sur les côtés */
+}
+
+.footer-bottom p {
+    font-size: 14px;
+    color: var(--text-muted);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 600px) {
+    .footer {
+        padding: 15px 0;
+    }
+
+    .footer-bottom p {
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px 20px;
+    }
+
+    .nav-links {
+        gap: 20px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .nav-actions {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .games-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 12px;
+    }
+
+    .card-img-wrapper {
+        height: 110px;
+    }
+}
+
+@media (max-width: 480px) {
+    .logo-text {
+        font-size: 22px;
+    }
+
+    .games-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+
+    .card-img-wrapper {
+        height: 90px;
+    }
+
+    .card-badge {
+        width: 28px;
+        height: 28px;
+        font-size: 11px;
+        bottom: -10px;
+        left: 8px;
+    }
+
+    .card-content h3 {
+        font-size: 11px;
+    }
+
+    .card-content p {
+        font-size: 10px;
+    }
+
+    .btn-card {
+        font-size: 10px;
+        padding: 6px 0;
+    }
+}
