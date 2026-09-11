@@ -82,8 +82,8 @@
                 <div class="card-content">
                     <h3>UNDERCOVER</h3>
                     <p>Sauras-tu démasquer le traître?</p>
-                    <button class="btn-card">Jouer <i class="fa-solid fa-arrow-right"></i></button>
-                </div>
+                    <a href="undercover.php" class="btn-card">Jouer <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
             </div>
 
             <!-- Carte 2 : ENCHÈRES -->
