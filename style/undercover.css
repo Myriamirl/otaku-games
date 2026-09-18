@@ -54,165 +54,6 @@
     margin-right: 6px;
 }
 
-/* Modes de jeu */
-.game-modes {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-    margin-bottom: 20px;
-}
-
-.mode-tag {
-    background: rgba(224, 83, 40, 0.08);
-    padding: 6px 18px;
-    border-radius: 20px;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text-dark);
-    border: 1px solid rgba(224, 83, 40, 0.15);
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.mode-tag:hover {
-    background: rgba(224, 83, 40, 0.15);
-}
-
-.mode-tag.active {
-    background: var(--primary-orange);
-    color: #fff;
-    border-color: var(--primary-orange);
-}
-
-.mode-tag i {
-    margin-right: 6px;
-}
-
-/* Mot à faire deviner */
-.word-display {
-    text-align: center;
-    background: rgba(224, 83, 40, 0.05);
-    border-radius: 16px;
-    padding: 25px 20px;
-    margin-bottom: 25px;
-    border: 2px solid rgba(224, 83, 40, 0.12);
-}
-
-.word-display .label {
-    font-size: 13px;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    font-weight: 600;
-}
-
-.word-display .word {
-    font-family: var(--font-heading);
-    font-size: 44px;
-    color: var(--primary-orange);
-    margin: 8px 0 4px;
-}
-
-.word-display .sub {
-    font-size: 13px;
-    color: var(--text-muted);
-}
-
-/* Grille des joueurs */
-.players-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-    gap: 14px;
-    margin: 20px 0 25px;
-}
-
-.player-card {
-    background: #fff;
-    border-radius: 16px;
-    padding: 14px 10px;
-    text-align: center;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    border: 2px solid transparent;
-    transition: all 0.2s;
-    position: relative;
-    cursor: pointer;
-}
-
-.player-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-}
-
-.player-card.impostor {
-    border-color: #e05328;
-    background: rgba(224, 83, 40, 0.06);
-}
-
-.player-card.impostor::after {
-    content: '🕵️';
-    position: absolute;
-    top: -8px;
-    right: -8px;
-    font-size: 14px;
-    background: #fff;
-    border-radius: 50%;
-    padding: 2px 4px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-.player-card.turn {
-    border-color: #f5c842;
-    box-shadow: 0 0 20px rgba(245, 200, 66, 0.25);
-}
-
-.player-card .avatar {
-    width: 46px;
-    height: 46px;
-    border-radius: 50%;
-    background: var(--bg-sand);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 8px;
-    font-weight: 700;
-    font-size: 18px;
-    color: var(--text-dark);
-}
-
-.player-card .name {
-    font-weight: 600;
-    font-size: 13px;
-    color: var(--text-dark);
-}
-
-.player-card .status {
-    font-size: 11px;
-    color: var(--text-muted);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-}
-
-.player-card .status.alive {
-    color: #2c7a4a;
-}
-
-.player-card .status.dead {
-    color: #e05328;
-}
-
-.player-card .turn-badge {
-    font-size: 10px;
-    background: #f5c842;
-    color: #1a1a2e;
-    padding: 2px 10px;
-    border-radius: 20px;
-    font-weight: 700;
-    display: inline-block;
-    margin-top: 4px;
-}
-
 /* Actions */
 .game-actions {
     display: flex;
@@ -263,26 +104,6 @@
     color: var(--primary-orange);
 }
 
-.btn-danger {
-    background: transparent;
-    color: #e05328;
-    border: 2px solid #e05328;
-    padding: 12px 35px;
-    border-radius: 30px;
-    font-weight: 600;
-    font-size: 15px;
-    cursor: pointer;
-    transition: all 0.2s;
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.btn-danger:hover {
-    background: #e05328;
-    color: #fff;
-}
-
 .back-link {
     display: inline-block;
     margin-top: 18px;
@@ -300,115 +121,115 @@
     margin-right: 6px;
 }
 
-/* Légende */
-.legend {
+/* ===== GRILLE DES JOUEURS DYNAMIQUE ET ADAPTATIVE ===== */
+
+.players-grid {
+    display: grid !important;
+    /* S'adapte au nombre de joueurs : s'aligne automatiquement tout en limitant la taille max des cartes */
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)) !important;
+    gap: 12px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    margin-top: 25px !important;
+    max-height: 400px; /* Évite que ça prenne trop de hauteur si vous êtes très nombreux */
+    overflow-y: auto;  /* Ajoute un petit scroll discret si la liste devient vraiment trop longue */
+    padding: 5px;
+}
+
+.player-card {
+    background: #fff !important;
+    border-radius: 14px !important;
+    padding: 12px 8px !important;
+    text-align: center !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    box-sizing: border-box !important;
+    border: 2px solid transparent;
+    transition: all 0.2s ease;
+}
+
+/* Ajustement dynamique de l'avatar et du texte dans les cartes */
+.player-card .avatar {
+    width: 45px !important;
+    height: 45px !important;
+    border-radius: 50% !important;
+    object-fit: cover !important;
+    margin: 0 auto 6px !important;
+}
+
+.player-card .name {
+    font-size: 12px !important;
+    font-weight: 600;
+    word-break: break-word; /* Évite que les pseudos longs cassent la mise en page */
+}
+
+.player-card.dead {
+    opacity: 0.6;
+    background: #f8f9fa !important;
+}
+
+/* ===== HABILLAGE ARRIÈRE-PLAN FLUIDE ET RESPONSIVE ===== */
+
+body.game-page-bg {
+    position: relative;
+    min-height: 100vh;
     display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
-    justify-content: center;
-    margin: 15px 0 5px;
-    font-size: 12px;
-    color: var(--text-muted);
+    flex-direction: column;
 }
 
-.legend-item {
-    display: flex;
-    align-items: center;
-    gap: 6px;
+/* Image de fond à gauche - S'adapte à la largeur de l'écran */
+body.game-page-bg::before {
+content: "";
+    position: fixed;
+    top: 0; /* Commence tout en haut de l'écran */
+    left: 2%; /* Collé près du bord gauche */
+    width: 20vw; /* Largeur fluide */
+    max-width: 320px;
+    min-width: 130px;
+    height: 100vh; /* S'étale sur toute la hauteur visible de la page */
+    background-image: url('../../asset/logo_avatar/kiubi.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0.12;
+    pointer-events: none;
+    z-index: 0;
+    border-radius: 0;
 }
 
-.legend-item .dot {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    border: 1px solid #ddd;
+/* Image de fond à droite - S'adapte symétriquement */
+body.game-page-bg::after {
+content: "";
+    position: fixed;
+    top: 0; /* Commence tout en haut de l'écran */
+    right: 2%; /* Collé près du bord droit */
+    width: 20vw; /* Largeur fluide */
+    max-width: 320px;
+    min-width: 130px;
+    height: 100vh; /* S'étale sur toute la hauteur visible de la page */
+    background-image: url('../../asset/logo_avatar/susanoo.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0.12;
+    pointer-events: none;
+    z-index: 0;
+    border-radius: 0;
 }
 
-.legend-item .dot.impostor {
-    background: rgba(224, 83, 40, 0.2);
-    border-color: #e05328;
+/* Maintient le contenu interactif au-dessus */
+body.game-page-bg .navbar, 
+body.game-page-bg .undercover-container, 
+body.game-page-bg .footer {
+    position: relative;
+    z-index: 1;
 }
 
-.legend-item .dot.turn {
-    background: #f5c842;
-    border-color: #f5c842;
-}
-
-.legend-item .dot.dead {
-    background: #e05328;
-    border-color: #e05328;
-}
-
-/* ===== RESPONSIVE ===== */
-@media (max-width: 768px) {
-    .game-panel {
-        padding: 20px;
-    }
-
-    .game-title {
-        font-size: 22px;
-    }
-
-    .word-display .word {
-        font-size: 34px;
-    }
-
-    .players-grid {
-        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-        gap: 10px;
-    }
-
-    .btn-primary, .btn-secondary, .btn-danger {
-        padding: 10px 20px;
-        font-size: 13px;
-        width: 100%;
-        justify-content: center;
-    }
-
-    .game-actions {
-        flex-direction: column;
-    }
-
-    .game-header {
-        flex-direction: column;
-        align-items: stretch;
-        text-align: center;
-    }
-
-    .room-code {
-        text-align: center;
-    }
-
-    .game-modes {
-        justify-content: center;
-    }
-}
-
-@media (max-width: 480px) {
-    .game-panel {
-        padding: 15px;
-    }
-
-    .word-display .word {
-        font-size: 28px;
-    }
-
-    .player-card {
-        padding: 10px 6px;
-    }
-
-    .player-card .avatar {
-        width: 38px;
-        height: 38px;
-        font-size: 15px;
-    }
-
-    .player-card .name {
-        font-size: 11px;
-    }
-
-    .mode-tag {
-        font-size: 11px;
-        padding: 4px 12px;
+/* Masque automatiquement les fonds sur les écrans plus étroits (tablettes et mobiles) */
+@media (max-width: 1200px) {
+    body.game-page-bg::before, body.game-page-bg::after {
+        display: none;
     }
 }

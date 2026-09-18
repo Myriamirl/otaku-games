@@ -1,13 +1,13 @@
 <?php
 session_start();
-require_once __DIR__ . '/../db_connect.php';
+require_once __DIR__ . '/db_connect.php';
 
 if (!isset($_SESSION['user_id'])) {
-    header('Location: ../index.php');
+    header('Location: index.php');
     exit();
 }
 
-$stmt = $pdo->prepare("SELECT pseudo, avatar FROM UTILISATEUR WHERE id = ?");
+$stmt = $pdo->prepare("SELECT pseudo, avatar FROM utilisateur WHERE id = ?");
 $stmt->execute([$_SESSION['user_id']]);
 $user = $stmt->fetch();
 ?>
@@ -22,7 +22,7 @@ $user = $stmt->fetch();
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="../style/style.css">
+    <link rel="stylesheet" href="style/style.css">
 </head>
 
 <body>
@@ -37,12 +37,12 @@ $user = $stmt->fetch();
         </div>
 
         <nav class="nav-links">
-            <a href="../index.php" class="nav-item">Accueil</a>
+            <a href="index.php" class="nav-item">Accueil</a>
             <a href="profil.php" class="nav-item active"><i class="fa-solid fa-user"></i> Mon compte</a>
         </nav>
 
         <div class="nav-actions">
-            <a href="../php/deconnexion.php" class="btn-connexion"><i class="fa-solid fa-right-from-bracket"></i> Déconnexion</a>
+            <a href="php/deconnexion.php" class="btn-connexion"><i class="fa-solid fa-right-from-bracket"></i> Déconnexion</a>
         </div>
     </header>
 
@@ -57,10 +57,10 @@ $user = $stmt->fetch();
                 <div class="alert alert-success"><?= htmlspecialchars($_GET['succes']) ?></div>
             <?php endif; ?>
 
-            <form action="../php/update_profile.php" method="POST">
+            <form action="php/update_profile.php" method="POST">
                 <!-- Aperçu de l'avatar actuel -->
                 <div class="current-avatar-preview">
-                    <img src="../asset/logo_avatar/<?= htmlspecialchars($user['avatar']) ?>" alt="Avatar actuel">
+                    <img src="asset/logo_avatar/<?= htmlspecialchars($user['avatar'] ?? 'avatar1.jpg') ?>" alt="Avatar actuel">
                 </div>
 
                 <!-- Sélection dynamique de TOUS les avatars -->
@@ -68,14 +68,12 @@ $user = $stmt->fetch();
                     <label>Changer d'avatar</label>
                     <div class="avatar-selector">
                         <?php
-                        $dossier = '../asset/logo_avatar/';
-                        // Récupère toutes les images (.jpg, .jpeg, .png, .webp) du dossier
+                        $dossier = 'asset/logo_avatar/';
                         $fichiers = glob($dossier . 'avatar*.{jpg,jpeg,png,webp}', GLOB_BRACE);
 
                         if ($fichiers):
                             foreach ($fichiers as $chemin):
                                 $nom = basename($chemin);
-                                // On coche l'avatar actuellement attribué au joueur
                                 $checked = ($user['avatar'] === $nom) ? 'checked' : '';
                         ?>
                                 <label>
@@ -112,32 +110,12 @@ $user = $stmt->fetch();
 
                 <button type="submit" class="btn-submit">Enregistrer les modifications</button>
             </form>
-
-            <div class="input-group">
-                <label for="pseudo">Changer de Pseudo</label>
-                <input type="text" id="pseudo" name="pseudo" value="<?= htmlspecialchars($user['pseudo']) ?>" required>
-            </div>
-
-            <hr style="border: 0; border-top: 1px solid #dcd0be; margin: 20px 0;">
-
-            <div class="input-group">
-                <label for="nouveau_mdp">Nouveau mot de passe (laisser vide pour conserver l'actuel)</label>
-                <input type="password" id="nouveau_mdp" name="nouveau_mdp">
-            </div>
-
-            <div class="input-group">
-                <label for="confirm_mdp">Confirmer le nouveau mot de passe</label>
-                <input type="password" id="confirm_mdp" name="confirm_mdp">
-            </div>
-
-            <button type="submit" class="btn-submit">Enregistrer les modifications</button>
-            </form>
         </div>
     </main>
 
     <footer class="footer">
         <div class="footer-bottom">
-            <p>&copy; 2026 Otak's Games. Tous droits réservés.</p>
+            <p>&copy; 2026 Otak's Games. Tous droits réservés.| Conçu avec <i class="fa-solid fa-heart" style="color: #e05328;"></i> pour la communauté Ehpad No Sekai.</p>
         </div>
     </footer>
 

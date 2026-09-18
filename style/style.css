@@ -30,6 +30,8 @@ body {
     align-items: center;
     padding: 15px 40px;
     background-color: transparent;
+    border-bottom: 3px solid var(--primary-orange);
+    background-color: var(--bg-sand);
 }
 
 .logo-container {

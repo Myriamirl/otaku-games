@@ -32,7 +32,7 @@ $est_connecte = isset($_SESSION['user_id']);
             <a href="index.php" class="nav-item active">Accueil</a>
             <a href="#" class="nav-item"><i class="fa-solid fa-crown"></i> Leaderboard</a>
             <?php if ($est_connecte): ?>
-                <a href="pages/profil.php" class="nav-item user-profile-link">
+                <a href="profil.php" class="nav-item user-profile-link">
                     <img src="asset/logo_avatar/<?= htmlspecialchars($_SESSION['avatar'] ?? 'avatar1.jpg') ?>" alt="Avatar" class="nav-avatar">
                     <span><?= htmlspecialchars($_SESSION['pseudo']) ?></span>
                 </a>
@@ -88,7 +88,7 @@ $est_connecte = isset($_SESSION['user_id']);
                     <h3>UNDERCOVER</h3>
                     <p>Sauras-tu démasquer le traître?</p>
                     <?php if ($est_connecte): ?>
-                        <a href="pages/undercover.php" class="btn-card">Jouer <i class="fa-solid fa-arrow-right"></i></a>
+                        <a href="undercover/pages/undercover.php" class="btn-card">Jouer <i class="fa-solid fa-arrow-right"></i></a>
                     <?php else: ?>
                         <button class="btn-card trigger-auth">Jouer <i class="fa-solid fa-arrow-right"></i></button>
                     <?php endif; ?>

@@ -14,7 +14,7 @@ $nouveau_mdp = $_POST['nouveau_mdp'] ?? '';
 $confirm_mdp = $_POST['confirm_mdp'] ?? '';
 
 if (empty($pseudo)) {
-    header('Location: ../pages/profil.php?erreur=Le+pseudo+ne+peut+pas+etre+vide');
+    header('Location: ../profil.php?erreur=Le+pseudo+ne+peut+pas+etre+vide');
     exit();
 }
 
@@ -23,7 +23,7 @@ $stmt = $pdo->prepare("SELECT id FROM UTILISATEUR WHERE pseudo = ? AND id != ?")
 $stmt->execute([$pseudo, $user_id]);
 
 if ($stmt->fetch()) {
-    header('Location: ../pages/profil.php?erreur=Ce+pseudo+est+deja+utilise');
+    header('Location: ../profil.php?erreur=Ce+pseudo+est+deja+utilise');
     exit();
 }
 
@@ -37,7 +37,7 @@ $_SESSION['avatar'] = $avatar;
 // Mettre à jour le mot de passe si un nouveau est entré
 if (!empty($nouveau_mdp)) {
     if ($nouveau_mdp !== $confirm_mdp) {
-        header('Location: ../pages/profil.php?erreur=Les+mots+de+passe+ne+correspondent+pas');
+        header('Location: ../profil.php?erreur=Les+mots+de+passe+ne+correspondent+pas');
         exit();
     }
 
@@ -46,5 +46,5 @@ if (!empty($nouveau_mdp)) {
     $stmtMdp->execute([$hash, $user_id]);
 }
 
-header('Location: ../pages/profil.php?succes=Profil+mis+a+jour+avec+succes');
+header('Location: ../profil.php?succes=Profil+mis+a+jour+avec+succes');
 exit();
