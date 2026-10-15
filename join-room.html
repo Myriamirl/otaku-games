@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Rejoindre une partie — Otaku Games</title>
+<meta http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self';" />
+<meta http-equiv="X-Content-Type-Options" content="nosniff" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Yuji+Syuku&family=Work+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body data-page="join-room">
+
+<div class="shell">
+  <header class="top-bar">
+    <a class="brand" href="index.html">
+      <svg class="brand-mark" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <circle cx="20" cy="20" r="17" stroke="#e2601f" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="88 20"/>
+      </svg>
+      <span class="brand-name">Otaku Games</span>
+    </a>
+    <a class="btn btn-outline btn-sm" href="index.html">Annuler</a>
+  </header>
+
+  <main style="max-width:480px;margin:60px auto;">
+    <div class="panel">
+      <div class="panel-header">
+        <h1 class="panel-title">Rejoindre une partie</h1>
+      </div>
+
+      <form id="join-form" novalidate>
+        <!-- Jeton anti-CSRF : sera généré par PHP côté serveur (session) -->
+        <input type="hidden" name="csrf_token" value="GENERATED_BY_PHP">
+
+        <div class="field" id="field-pseudo">
+          <label for="pseudo">Ton pseudo</label>
+          <input type="text" id="pseudo" name="pseudo" placeholder="ex : Kaito" autocomplete="off" maxlength="16" required>
+          <span class="field-hint">2 à 16 caractères, lettres et chiffres.</span>
+          <span class="field-error">Choisis un pseudo valide (2 à 16 caractères).</span>
+        </div>
+
+        <div class="field" id="field-code">
+          <label for="room-code">Code de la partie</label>
+          <input type="text" id="room-code" name="room_code" placeholder="ex : K3NJA9" autocomplete="off" maxlength="8" required style="font-family:var(--font-mono);letter-spacing:0.15em;text-transform:uppercase">
+          <span class="field-hint">Demande le code à l'Hokage qui a créé la partie.</span>
+          <span class="field-error">Ce code ne semble pas valide.</span>
+        </div>
+
+        <button type="submit" id="join-submit" class="btn btn-primary btn-block">Rejoindre</button>
+      </form>
+    </div>
+  </main>
+</div>
+
+<script src="assets/js/app.js"></script>
+<script src="assets/js/pages/join-room.js"></script>
+</body>
+</html>

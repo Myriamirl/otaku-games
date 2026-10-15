@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Partie en cours — Otaku Games</title>
+<meta http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self';" />
+<meta http-equiv="X-Content-Type-Options" content="nosniff" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Yuji+Syuku&family=Work+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body data-page="game">
+
+<div class="shell">
+  <header class="top-bar">
+    <a class="brand" href="index.html">
+      <svg class="brand-mark" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <circle cx="20" cy="20" r="17" stroke="#e2601f" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="88 20"/>
+      </svg>
+      <span class="brand-name">Otaku Games</span>
+    </a>
+    <div style="display:flex;align-items:center;gap:14px">
+      <span class="pill" id="round-pill">Manche 1 / 3</span>
+      <div class="timer-ring" id="timer-ring">30</div>
+    </div>
+  </header>
+
+  <main style="max-width:920px;margin:36px auto 80px;">
+    <div class="two-col" style="align-items:start;grid-template-columns:1fr 1.4fr">
+
+      <!-- Colonne joueurs / tour -->
+      <div class="panel">
+        <div class="panel-header">
+          <h2 class="panel-title">Joueurs</h2>
+        </div>
+        <div id="players-list"></div>
+      </div>
+
+      <!-- Colonne jeu -->
+      <div class="stack">
+
+        <div class="word-card" id="word-card" role="button" tabindex="0" aria-pressed="false">
+          <div class="word-card-label">Ton mot — clique pour l'afficher</div>
+          <div class="word-card-value is-hidden" id="word-value">Ramen</div>
+          <div class="word-card-hint">Ne le montre à personne autour de toi.</div>
+        </div>
+
+        <div class="panel" id="turn-panel">
+          <div class="panel-header">
+            <h2 class="panel-title">Indice</h2>
+            <span class="pill pill-accent" id="turn-indicator">Ton tour</span>
+          </div>
+          <p style="margin-bottom:14px">Donne un mot ou une courte phrase pour prouver que tu connais le mot commun, sans le révéler.</p>
+          <form id="clue-form">
+            <div class="field" style="margin-bottom:14px">
+              <input type="text" id="clue-input" placeholder="ex : chaud, réconfortant…" maxlength="40" autocomplete="off">
+            </div>
+            <button type="submit" class="btn btn-primary btn-block" id="clue-submit">Valider mon indice</button>
+          </form>
+        </div>
+
+        <div class="panel" id="vote-panel" style="display:none">
+          <div class="panel-header">
+            <h2 class="panel-title">Vote</h2>
+            <span class="pill pill-deep">Qui est l'espion ?</span>
+          </div>
+          <div id="vote-options" class="stack" style="gap:10px"></div>
+          <button type="button" class="btn btn-primary btn-block" id="vote-submit" style="margin-top:18px" disabled>
+            Confirmer mon vote
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="assets/js/app.js"></script>
+<script src="assets/js/pages/game.js"></script>
+</body>
+</html>
