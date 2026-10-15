@@ -1,73 +1,118 @@
 <?php
-session_start();
 require_once __DIR__ . '/../db_connect.php';
+require_once __DIR__ . '/security.php';
 
-$action = $_POST['action'] ?? '';
+$action     = $_POST['action'] ?? '';
+$csrf_token = $_POST['csrf_token'] ?? '';
+
+// Contrôle CSRF Global
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !verify_csrf_token($csrf_token)) {
+    header('Location: ../index.php?erreur=erreur_serveur');
+    exit();
+}
 
 // --- TRAITEMENT INSCRIPTION ---
 if ($action === 'inscription') {
-    $pseudo       = trim($_POST['pseudo'] ?? '');
-    $mot_de_passe = $_POST['mot_de_passe'] ?? '';
-    $confirmation = $_POST['confirmation'] ?? '';
-    $avatar       = trim($_POST['avatar'] ?? 'avatar1.jpg');
+    $nom            = trim($_POST['nom'] ?? '');
+    $prenom         = trim($_POST['prenom'] ?? '');
+    $email          = filter_var(trim($_POST['email'] ?? ''), FILTER_VALIDATE_EMAIL);
+    $date_naissance = $_POST['date_naissance'] ?? '';
+    $pseudo         = trim($_POST['pseudo'] ?? '');
+    $mot_de_passe   = $_POST['mot_de_passe'] ?? '';
+    $confirmation   = $_POST['confirmation'] ?? '';
+    $avatar_saisie  = trim($_POST['avatar'] ?? ''); 
 
-    if (empty($pseudo) || empty($mot_de_passe) || empty($confirmation)) {
-        header('Location: ../index.php?erreur=Veuillez+remplir+tous+les+champs');
+    // Contrôle de présence de TOUS les champs (avatar inclus)
+    if (!$nom || !$prenom || !$email || !$date_naissance || !$pseudo || !$mot_de_passe || !$confirmation || empty($avatar_saisie)) {
+        header('Location: ../index.php?erreur=champs_vides');
+        exit();
+    }
+
+    // Validation date de naissance
+    $d = DateTime::createFromFormat('Y-m-d', $date_naissance);
+    if (!$d || $d->format('Y-m-d') !== $date_naissance) {
+        header('Location: ../index.php?erreur=champs_vides');
+        exit();
+    }
+
+    //  Validation pseudo (Regex Unicode alignée sur app.js)
+    if (!preg_match('/^[\p{L}0-9 _-]{2,20}$/u', $pseudo)) {
+        header('Location: ../index.php?erreur=pseudo_longueur');
+        exit();
+    }
+
+    // Validation mot de passe (8 car. min, 1 majuscule, 1 chiffre)
+    if (strlen($mot_de_passe) < 8 || !preg_match('/[A-Z]/', $mot_de_passe) || !preg_match('/[0-9]/', $mot_de_passe)) {
+        header('Location: ../index.php?erreur=mdp_court');
         exit();
     }
 
     if ($mot_de_passe !== $confirmation) {
-        header('Location: ../index.php?erreur=Les+mots+de+passe+ne+correspondent+pas');
+        header('Location: ../index.php?erreur=mdp_mismatch');
         exit();
     }
 
-    if (strlen($pseudo) < 3 || strlen($pseudo) > 20) {
-        header('Location: ../index.php?erreur=Le+pseudo+doit+faire+entre+3+et+20+caracteres');
+    // Validation de l'avatar sur Liste Blanche (Whitelisting contre Path Traversal)
+    $dossier = __DIR__ . '/../asset/logo_avatar/';
+    $avatars_fichiers = glob($dossier . 'avatar*.{jpg,jpeg,png,webp}', GLOB_BRACE);
+    $avatars_valides = array_map('basename', $avatars_fichiers ?: []);
+
+    if (!in_array($avatar_saisie, $avatars_valides, true)) {
+        header('Location: ../index.php?erreur=champs_vides');
         exit();
     }
+    $avatar = $avatar_saisie;
 
-    $stmt = $pdo->prepare("SELECT id FROM UTILISATEUR WHERE pseudo = ?");
-    $stmt->execute([$pseudo]);
-
+    // Unicité du pseudo ou de l'email
+    $stmt = $pdo->prepare("SELECT id FROM utilisateur WHERE pseudo = ? OR email = ?");
+    $stmt->execute([$pseudo, $email]);
     if ($stmt->fetch()) {
-        header('Location: ../index.php?erreur=Ce+pseudo+est+deja+pris');
+        header('Location: ../index.php?erreur=pseudo_pris');
         exit();
     }
 
-    $hash = password_hash($mot_de_passe, PASSWORD_DEFAULT);
+    // Hachage du mot de passe
+    $hash_algo = defined('PASSWORD_ARGON2ID') ? PASSWORD_ARGON2ID : PASSWORD_DEFAULT;
+    $hash = password_hash($mot_de_passe, $hash_algo);
 
     try {
         $pdo->beginTransaction();
 
-        $stmtInsert = $pdo->prepare("INSERT INTO UTILISATEUR (pseudo, mot_de_passe, avatar) VALUES (?, ?, ?)");
-        $stmtInsert->execute([$pseudo, $hash, $avatar]);
+        $stmtInsert = $pdo->prepare("INSERT INTO utilisateur (pseudo, email, nom, prenom, date_naissance, mot_de_passe, avatar) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        $stmtInsert->execute([$pseudo, $email, $nom, $prenom, $date_naissance, $hash, $avatar]);
         $utilisateur_id = $pdo->lastInsertId();
 
-        $stmtLeaderboard = $pdo->prepare("INSERT INTO LEADERBOARD (utilisateur_id) VALUES (?)");
+        $stmtLeaderboard = $pdo->prepare("INSERT INTO leaderboard (utilisateur_id) VALUES (?)");
         $stmtLeaderboard->execute([$utilisateur_id]);
 
         $pdo->commit();
-        header('Location: ../index.php?succes=Compte+cree+avec+succes+!+Vous+pouvez+vous+connecter');
+        header('Location: ../index.php?succes=inscr_ok');
         exit();
     } catch (Exception $e) {
         $pdo->rollBack();
         error_log($e->getMessage());
-        header('Location: ../index.php?erreur=Une+erreur+est+survenue+lors+de+l+inscription');
+        header('Location: ../index.php?erreur=erreur_serveur');
         exit();
     }
 }
 
 // --- TRAITEMENT CONNEXION ---
 if ($action === 'connexion') {
+    // Rate Limiting : max 5 essais / 15min
+    if (!check_rate_limit('login_attempt', 5, 900)) {
+        header('Location: ../index.php?erreur=trop_de_tentatives');
+        exit();
+    }
+
     $pseudo       = trim($_POST['pseudo'] ?? '');
     $mot_de_passe = $_POST['mot_de_passe'] ?? '';
 
     if (empty($pseudo) || empty($mot_de_passe)) {
-        header('Location: ../index.php?erreur=Veuillez+saisir+votre+pseudo+et+mot+de+passe');
+        header('Location: ../index.php?erreur=champs_vides');
         exit();
     }
 
-    $stmt = $pdo->prepare("SELECT id, pseudo, mot_de_passe, avatar FROM UTILISATEUR WHERE pseudo = ?");
+    $stmt = $pdo->prepare("SELECT id, pseudo, mot_de_passe, avatar FROM utilisateur WHERE pseudo = ?");
     $stmt->execute([$pseudo]);
     $user = $stmt->fetch();
 
@@ -77,10 +122,12 @@ if ($action === 'connexion') {
         $_SESSION['pseudo']  = $user['pseudo'];
         $_SESSION['avatar']  = $user['avatar'];
 
+        unset($_SESSION['rate_limits']['login_attempt']);
+
         header('Location: ../index.php');
         exit();
     } else {
-        header('Location: ../index.php?erreur=Identifiants+incorrects');
+        header('Location: ../index.php?erreur=identifiants_inc');
         exit();
     }
 }

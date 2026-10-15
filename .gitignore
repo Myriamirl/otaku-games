@@ -2,3 +2,4 @@
 *.log
 .env
 db_connect.php
+.DS_Store

@@ -1,16 +1,20 @@
 <?php
 session_start();
 require_once __DIR__ . '/db_connect.php';
+require_once __DIR__ . '/php/security.php';
 
 if (!isset($_SESSION['user_id'])) {
     header('Location: index.php');
     exit();
 }
 
-$stmt = $pdo->prepare("SELECT pseudo, avatar FROM utilisateur WHERE id = ?");
+$token_csrf = generate_csrf_token();
+
+$stmt = $pdo->prepare("SELECT pseudo, email, nom, prenom, date_naissance, avatar FROM utilisateur WHERE id = ?");
 $stmt->execute([$_SESSION['user_id']]);
 $user = $stmt->fetch();
 ?>
+
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -58,6 +62,7 @@ $user = $stmt->fetch();
             <?php endif; ?>
 
             <form action="php/update_profile.php" method="POST">
+                <input type="hidden" name="csrf_token" value="<?= $token_csrf ?>">
                 <!-- Aperçu de l'avatar actuel -->
                 <div class="current-avatar-preview">
                     <img src="asset/logo_avatar/<?= htmlspecialchars($user['avatar'] ?? 'avatar1.jpg') ?>" alt="Avatar actuel">

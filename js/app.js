@@ -109,7 +109,7 @@ window.OtakuGames = (function () {
     });
   }
 
-  /* ---------- Appels vers l'API PHP (à brancher en phase 2) ---------- */
+  /* ---------- Appels vers l'API PHP ---------- */
 
   async function apiRequest(endpoint, payload) {
     // NOTE POUR LA SUITE (backend PHP) :

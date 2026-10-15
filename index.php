@@ -1,7 +1,15 @@
 <?php
-session_start();
+//Charger la connexion à la BDD (qui démarre déjà la session de façon sécurisée+++++++++)
+require_once __DIR__ . '/db_connect.php';
+
+// Charger les fonctions de sécurité (CSRF, Rate Limiting)
+require_once __DIR__ . '/php/security.php';
+
+// Définir les variables d'état pour la page
 $est_connecte = isset($_SESSION['user_id']);
+$token_csrf   = generate_csrf_token();
 ?>
+
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -88,7 +96,7 @@ $est_connecte = isset($_SESSION['user_id']);
                     <h3>UNDERCOVER</h3>
                     <p>Sauras-tu démasquer le traître?</p>
                     <?php if ($est_connecte): ?>
-                        <a href="undercover/pages/undercover.php" class="btn-card">Jouer <i class="fa-solid fa-arrow-right"></i></a>
+                        <a href="undercover/php/undercover.php" class="btn-card">Jouer <i class="fa-solid fa-arrow-right"></i></a>
                     <?php else: ?>
                         <button class="btn-card trigger-auth">Jouer <i class="fa-solid fa-arrow-right"></i></button>
                     <?php endif; ?>
@@ -194,83 +202,126 @@ $est_connecte = isset($_SESSION['user_id']);
     </main>
 
 <!-- ===== MODALE CONNEXION / INSCRIPTION ===== -->
-    <div id="authModal" class="modal-overlay <?= (!empty($_GET['erreur']) || !empty($_GET['succes'])) ? 'active' : '' ?>">
-        <div class="modal-card">
-            <button class="close-modal" id="closeAuthBtn">&times;</button>
+<div id="authModal" class="modal-overlay <?= (!empty($_GET['erreur']) || !empty($_GET['succes'])) ? 'active' : '' ?>">
+    <div class="modal-card">
+        <button class="close-modal" id="closeAuthBtn">&times;</button>
 
-            <?php if (isset($_GET['erreur'])): ?>
-                <div class="alert alert-error"><?= htmlspecialchars($_GET['erreur']) ?></div>
-            <?php endif; ?>
+        <?php 
+        $messages_erreur = [
+            'champs_vides'       => 'Veuillez remplir tous les champs obligatoires, y compris le choix de l\'avatar.',
+            'email_invalide'     => 'L\'adresse email saisie est invalide.',
+            'mdp_mismatch'      => 'Les mots de passe ne correspondent pas.',
+            'pseudo_longueur'    => 'Le pseudo doit contenir entre 2 et 20 caractères.',
+            'mdp_court'          => 'Le mot de passe doit faire 8 caractères min., avec 1 majuscule et 1 chiffre.',
+            'pseudo_pris'        => 'Ce pseudo ou cet email est déjà utilisé.',
+            'identifiants_inc'   => 'Identifiants incorrects.',
+            'trop_de_tentatives' => 'Trop de tentatives échouées. Veuillez patienter 15 minutes.',
+            'erreur_serveur'     => 'Une erreur de sécurité ou serveur est survenue.'
+        ];
 
-            <?php if (isset($_GET['succes'])): ?>
-                <div class="alert alert-success"><?= htmlspecialchars($_GET['succes']) ?></div>
-            <?php endif; ?>
+        $messages_succes = [
+            'inscr_ok' => 'Compte créé avec succès ! Vous pouvez vous connecter.'
+        ];
+        ?>
 
-            <!-- Formulaire de Connexion -->
-            <div id="formConnexion">
-                <h3>Connexion</h3>
-                <form action="php/auth.php" method="POST">
-                    <input type="hidden" name="action" value="connexion">
-                    <div class="input-group">
-                        <label>Pseudo</label>
-                        <input type="text" name="pseudo" required>
-                    </div>
-                    <div class="input-group">
-                        <label>Mot de passe</label>
-                        <input type="password" name="mot_de_passe" required>
-                    </div>
-                    <button type="submit" class="btn-submit">Se connecter</button>
-                </form>
-                <p class="switch-text">Pas de compte ? <a href="#" id="showInscription">S'inscrire</a></p>
-            </div>
+        <?php if (isset($_GET['erreur']) && isset($messages_erreur[$_GET['erreur']])): ?>
+            <div class="alert alert-error"><?= htmlspecialchars($messages_erreur[$_GET['erreur']]) ?></div>
+        <?php endif; ?>
 
-            <!-- Formulaire d'Inscription -->
-            <div id="formInscription" style="display: none;">
-                <h3>Inscription</h3>
-                <form action="php/auth.php" method="POST">
-                    <input type="hidden" name="action" value="inscription">
-                    <div class="input-group">
-                        <label>Pseudo</label>
-                        <input type="text" name="pseudo" required>
-                    </div>
-                    <div class="input-group">
-                        <label>Mot de passe</label>
-                        <input type="password" name="mot_de_passe" required>
-                    </div>
-                    <div class="input-group">
-                        <label>Confirmer le mot de passe</label>
-                        <input type="password" name="confirmation" required>
-                    </div>
+        <?php if (isset($_GET['succes']) && isset($messages_succes[$_GET['succes']])): ?>
+            <div class="alert alert-success"><?= htmlspecialchars($messages_succes[$_GET['succes']]) ?></div>
+        <?php endif; ?>
 
-                    <!-- Choix de l'avatar dynamique -->
-                    <div class="input-group">
-                        <label>Choisis ton avatar</label>
-                        <div class="avatar-selector">
-                            <?php
-                            $dossier = 'asset/logo_avatar/';
-                            $avatars = glob($dossier . 'avatar*.{jpg,jpeg,png,webp}', GLOB_BRACE);
-                            if ($avatars):
-                                foreach ($avatars as $index => $chemin):
-                                    $nom = basename($chemin);
-                                    $checked = ($index === 0) ? 'checked' : '';
-                            ?>
-                                    <label>
-                                        <input type="radio" name="avatar" value="<?= htmlspecialchars($nom) ?>" <?= $checked ?>>
-                                        <img src="<?= htmlspecialchars($chemin) ?>" alt="Avatar">
-                                    </label>
-                            <?php
-                                endforeach;
-                            endif;
-                            ?>
-                        </div>
-                    </div>
+        <!-- Formulaire de Connexion -->
+        <div id="formConnexion">
+            <h3>Connexion</h3>
+            <form action="php/auth.php" method="POST">
+                <input type="hidden" name="action" value="connexion">
+                <input type="hidden" name="csrf_token" value="<?= $token_csrf ?>">
+                
+                <div class="input-group">
+                    <label>Pseudo</label>
+                    <input type="text" name="pseudo" required>
+                </div>
+                <div class="input-group">
+                    <label>Mot de passe</label>
+                    <input type="password" name="mot_de_passe" required>
+                </div>
+                <button type="submit" class="btn-submit">Se connecter</button>
+            </form>
+            <p class="switch-text">Pas de compte ? <a href="#" id="showInscription">S'inscrire</a></p>
+        </div>
 
-                    <button type="submit" class="btn-submit">Créer mon compte</button>
-                </form>
-                <p class="switch-text">Déjà un compte ? <a href="#" id="showConnexion">Se connecter</a></p>
-            </div>
+        <!-- Formulaire d'Inscription -->
+        <div id="formInscription" style="display: none;">
+            <h3>Inscription</h3>
+            <form action="php/auth.php" method="POST">
+                <input type="hidden" name="action" value="inscription">
+                <input type="hidden" name="csrf_token" value="<?= $token_csrf ?>">
+                
+                <div class="input-group">
+                    <label>Nom</label>
+                    <input type="text" name="nom" required placeholder="Votre nom">
+                </div>
+
+                <div class="input-group">
+                    <label>Prénom</label>
+                    <input type="text" name="prenom" required placeholder="Votre prénom">
+                </div>
+
+                <div class="input-group">
+                    <label>Adresse Email</label>
+                    <input type="email" name="email" required placeholder="exemple@mail.com">
+                </div>
+
+                <div class="input-group">
+                    <label>Date de naissance</label>
+                    <input type="date" name="date_naissance" required>
+                </div>
+
+                <div class="input-group">
+                    <label>Pseudo</label>
+                    <input type="text" name="pseudo" required placeholder="Entre 2 et 20 caractères">
+                </div>
+
+                <div class="input-group">
+                    <label>Mot de passe</label>
+                    <input type="password" name="mot_de_passe" required placeholder="8 caractères min., 1 majuscule, 1 chiffre">
+                </div>
+
+                <div class="input-group">
+                    <label>Confirmer le mot de passe</label>
+                    <input type="password" name="confirmation" required>
+                </div>
+
+                <!-- Choix de l'avatar OBLIGATOIRE  -->
+                <div class="input-group">
+                    <label>Choisis ton avatar <span style="color: var(--primary-orange)">*</span></label>
+                    <div class="avatar-selector">
+                        <?php
+                        $dossier = 'asset/logo_avatar/';
+                        $avatars = glob($dossier . 'avatar*.{jpg,jpeg,png,webp}', GLOB_BRACE);
+                        if ($avatars):
+                            foreach ($avatars as $chemin):
+                                $nom = basename($chemin);
+                        ?>
+                                <label>
+                                    <input type="radio" name="avatar" value="<?= htmlspecialchars($nom) ?>" required>
+                                    <img src="<?= htmlspecialchars($chemin) ?>" alt="Avatar">
+                                </label>
+                        <?php
+                            endforeach;
+                        endif;
+                        ?>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit">Créer mon compte</button>
+            </form>
+            <p class="switch-text">Déjà un compte ? <a href="#" id="showConnexion">Se connecter</a></p>
         </div>
     </div>
+</div>
 
         <!-- PIED DE PAGE -->
         <footer class="footer">

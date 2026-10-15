@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : ven. 18 sep. 2026 à 09:45
+-- Généré le : jeu. 15 oct. 2026 à 15:56
 -- Version du serveur : 8.4.7
 -- Version de PHP : 8.3.28
 
@@ -71,7 +71,16 @@ CREATE TABLE IF NOT EXISTS `indice` (
   `tour_numero` int NOT NULL,
   PRIMARY KEY (`id`),
   KEY `partie_joueur_id` (`partie_joueur_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `indice`
+--
+
+INSERT INTO `indice` (`id`, `partie_joueur_id`, `contenu`, `tour_numero`) VALUES
+(1, 8, 'nul', 1),
+(2, 7, 'dire', 2),
+(3, 8, 'fqddf', 2);
 
 -- --------------------------------------------------------
 
@@ -88,7 +97,15 @@ CREATE TABLE IF NOT EXISTS `leaderboard` (
   `victoires` int DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `utilisateur_id` (`utilisateur_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `leaderboard`
+--
+
+INSERT INTO `leaderboard` (`id`, `utilisateur_id`, `points_totaux`, `parties_jouees`, `victoires`) VALUES
+(1, 1, 0, 0, 0),
+(2, 2, 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -125,7 +142,29 @@ CREATE TABLE IF NOT EXISTS `partie_joueur` (
   KEY `partie_id` (`partie_id`),
   KEY `utilisateur_id` (`utilisateur_id`),
   KEY `personnage_id` (`personnage_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `partie_joueur`
+--
+
+INSERT INTO `partie_joueur` (`id`, `partie_id`, `utilisateur_id`, `personnage_id`, `role`, `vivant`) VALUES
+(1, 1, 1, NULL, NULL, 1),
+(2, 2, 2, NULL, NULL, 1),
+(3, 3, 1, NULL, NULL, 1),
+(4, 3, 2, NULL, NULL, 1),
+(5, 4, 1, 49, 'undercover', 1),
+(6, 4, 2, 64, 'civil', 1),
+(7, 5, 1, 6, 'civil', 1),
+(8, 5, 2, 60, 'undercover', 1),
+(9, 6, 1, NULL, NULL, 1),
+(10, 7, 1, NULL, NULL, 1),
+(11, 8, 1, NULL, NULL, 1),
+(12, 8, 2, NULL, NULL, 1),
+(13, 9, 1, 122, 'civil', 1),
+(14, 9, 2, 73, 'undercover', 1),
+(15, 10, 2, 5, 'civil', 1),
+(16, 10, 1, 52, 'undercover', 1);
 
 -- --------------------------------------------------------
 
@@ -140,10 +179,31 @@ CREATE TABLE IF NOT EXISTS `partie_undercover` (
   `univers_id` int NOT NULL,
   `mode` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
   `statut` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nb_tours` int DEFAULT NULL,
+  `tours_vote` int DEFAULT NULL,
+  `nb_undercover` int DEFAULT NULL,
+  `joueur_actuel_id` int DEFAULT NULL,
+  `tour_actuel` int DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `code_room` (`code_room`),
   KEY `univers_id` (`univers_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `partie_undercover`
+--
+
+INSERT INTO `partie_undercover` (`id`, `code_room`, `univers_id`, `mode`, `statut`, `nb_tours`, `tours_vote`, `nb_undercover`, `joueur_actuel_id`, `tour_actuel`) VALUES
+(1, 'KYJ6N9', 1, 'Original', 'attente', NULL, NULL, NULL, NULL, 1),
+(2, '6A5JKS', 1, 'Original', 'attente', NULL, NULL, NULL, NULL, 1),
+(3, 'OE8CDK', 1, 'Original', 'attente', NULL, NULL, NULL, NULL, 1),
+(4, 'ZG51KC', 1, 'Original', 'en_cours', 3, 2, 1, NULL, 1),
+(5, 'UKXOZ1', 1, 'Original', 'en_cours', 2, 1, 1, 7, 3),
+(6, 'PH482E', 1, 'Original', 'attente', 3, 1, 1, NULL, 1),
+(7, 'NCFJO3', 1, 'Original', 'attente', 5, 1, 1, NULL, 1),
+(8, 'WE5T42', 1, 'Original', 'attente', 4, 2, 2, NULL, 1),
+(9, '5EBTN7', 2, 'Original', 'en_cours', 3, 2, 1, 14, 1),
+(10, 'MO32FK', 1, 'Original', 'en_cours', 3, 3, 1, 16, 1);
 
 -- --------------------------------------------------------
 
@@ -356,10 +416,23 @@ DROP TABLE IF EXISTS `utilisateur`;
 CREATE TABLE IF NOT EXISTS `utilisateur` (
   `id` int NOT NULL AUTO_INCREMENT,
   `pseudo` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nom` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `prenom` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `date_naissance` date NOT NULL,
   `mot_de_passe` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `avatar` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'avatar1.jpg',
   PRIMARY KEY (`id`),
   UNIQUE KEY `pseudo` (`pseudo`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `utilisateur`
+--
+
+INSERT INTO `utilisateur` (`id`, `pseudo`, `email`, `nom`, `prenom`, `date_naissance`, `mot_de_passe`, `avatar`) VALUES
+(1, 'hedgegane', '', '', '', '0000-00-00', '$2y$10$W17BLvsHix3ASkBfm8n8m.7FPb4o9kVnSO9vJfntHNWBWP7sMwtlq', 'avatar6.jpg'),
+(2, 'test', '', '', '', '0000-00-00', '$2y$10$8CKJ/1Wzxyx2R3laNSeRleb1DpGK2be1TnuPB1uL2xdL5Rd689MEq', 'avatar5.jpg');
 
 -- --------------------------------------------------------
 

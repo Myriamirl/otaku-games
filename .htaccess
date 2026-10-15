@@ -1,0 +1,17 @@
+# Protection contre le Clickjacking
+Header set X-Frame-Options "DENY"
+
+# Désactivation de l'inspection de type MIME
+Header set X-Content-Type-Options "nosniff"
+
+# Protection XSS
+Header set X-XSS-Protection "1; mode=block"
+
+# Referrer Policy
+Header set Referrer-Policy "strict-origin-when-cross-origin"
+
+# Content Security Policy (autorise les appels API fetch locaux et les ressources nécessaires)
+Header set Content-Security-Policy "default-src 'self'; script-src 'self' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self';"
+
+# Masquer le contenu des dossiers
+Options -Indexes
