@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     // ----------------------------------------------------
-    // 1. GESTION DE LA MODALE CONNEXION / INSCRIPTION
+    // GESTION DE LA MODALE CONNEXION / INSCRIPTION
     // ----------------------------------------------------
     const authModal = document.getElementById('authModal');
     const openAuthBtn = document.getElementById('openAuthBtn');
@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ----------------------------------------------------
-    // 2. INTERACTIONS CARTES DE JEUX
+    // INTERACTIONS CARTES DE JEUX
     // ----------------------------------------------------
     const gameCards = document.querySelectorAll('.game-card');
 

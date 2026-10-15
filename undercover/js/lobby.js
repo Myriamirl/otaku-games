@@ -16,8 +16,7 @@
   const isHost = myRole === "hokage";
   const maxPlayers = 6;
 
-  // DÉMO uniquement : la vraie liste viendra d'un polling PHP,
-  // ex: setInterval(() => OG.apiRequest("poll_lobby", { room_code }), 2500)
+
   let players = [{ pseudo: myPseudo, host: isHost }];
   const demoNames = ["Saya", "Renji", "Aoi", "Kenta", "Mika"];
 
