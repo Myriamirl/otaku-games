@@ -1,12 +1,17 @@
-/* VARIABLES ET RESET */
+/* =========================================================
+   OTAK'S GAMES · DESIGN SYSTEM GLOBAL
+   ========================================================= */
+
 :root {
     --bg-sand: #cba87c;
     --card-bg: #fffbf2;
     --primary-orange: #e05328;
+    --primary-orange-hover: #c9441d;
     --text-dark: #2c221e;
     --text-muted: #736357;
     --font-heading: 'Playfair Display', Georgia, serif;
     --font-body: 'Poppins', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
 }
 
 * {
@@ -20,7 +25,8 @@ body {
     font-family: var(--font-body);
     color: var(--text-dark);
     min-height: 100vh;
-    padding-bottom: 0;
+    display: flex;
+    flex-direction: column;
 }
 
 /* NAVBAR */
@@ -29,9 +35,8 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 15px 40px;
-    background-color: transparent;
-    border-bottom: 3px solid var(--primary-orange);
     background-color: var(--bg-sand);
+    border-bottom: 3px solid var(--primary-orange);
 }
 
 .logo-container {
@@ -72,7 +77,7 @@ body {
     transition: color 0.2s ease;
 }
 
-.nav-item.active {
+.nav-item.active, .nav-item:hover {
     color: var(--primary-orange);
 }
 
@@ -85,10 +90,6 @@ body {
     height: 3px;
     background-color: var(--primary-orange);
     border-radius: 2px;
-}
-
-.nav-item:hover {
-    color: var(--primary-orange);
 }
 
 .nav-actions {
@@ -117,67 +118,45 @@ body {
     display: flex;
     align-items: center;
     gap: 8px;
+    text-decoration: none;
     box-shadow: 0 4px 10px rgba(224, 83, 40, 0.3);
     transition: transform 0.2s, background-color 0.2s;
 }
 
 .btn-connexion:hover {
-    background-color: #c9441d;
+    background-color: var(--primary-orange-hover);
     transform: translateY(-2px);
 }
 
-/* BANNIÈRE HERO */
-.hero-banner {
-    width: 100%;
-    max-height: 480px;
-    overflow: hidden;
-    position: relative;
-
-}
-.wave-svg {
-    width: 100%;
-    height: auto;
-    max-height: 480px;
-    display: block;
+.nav-links .user-profile-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
 }
 
-.hero-img {
-    width: 100%;
-    height: 100%;
+.nav-links .nav-avatar {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
     object-fit: cover;
-    display: block;
-    background-color: #d1b48c;
+    border: 2px solid var(--primary-orange);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s ease;
 }
 
-/* SECTION JEUX */
+.nav-links .user-profile-link:hover .nav-avatar {
+    transform: scale(1.1);
+}
+
+/* CARTS DE JEUX (PAGE D'ACCUEIL) */
 .games-section {
     max-width: 1300px;
     margin: 20px auto 0;
     padding: 0 20px;
-    flex : 1;
+    flex: 1;
 }
 
-.section-title-container {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 25px;
-}
-
-.konoha-icon {
-    width: 32px;
-    height: 32px;
-}
-
-.section-title-container h2 {
-    font-family: var(--font-heading);
-    font-size: 32px;
-    font-weight: 700;
-    color: var(--text-dark);
-    letter-spacing: 1px;
-}
-
-/* GRILLE DES CARTES */
 .games-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -200,13 +179,11 @@ body {
     box-shadow: 0 10px 22px rgba(0, 0, 0, 0.12);
 }
 
-/* ===== CORRECTION IMPORTANTE : les badges ===== */
 .card-img-wrapper {
     position: relative;
     width: 100%;
     height: 140px;
     border-radius: 12px;
-    overflow: visible; /* Permet au badge de dépasser */
     background-color: #e2d2bd;
 }
 
@@ -232,139 +209,9 @@ body {
     border: 3px solid var(--card-bg);
     font-size: 14px;
     z-index: 2;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
-.card-content {
-    margin-top: 22px;
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    justify-content: space-between;
-}
-
-.card-content h3 {
-    font-size: 13px;
-    font-weight: 700;
-    text-transform: uppercase;
-    color: var(--text-dark);
-    margin-bottom: 6px;
-}
-
-.card-content p {
-    font-size: 11px;
-    color: var(--text-muted);
-    line-height: 1.4;
-    margin-bottom: 15px;
-}
-
-.btn-card {
-    width: 100%;
-    padding: 8px 0;
-    background-color: transparent;
-    border: 1px solid #dcd0be;
-    border-radius: 20px;
-    font-weight: 600;
-    font-size: 12px;
-    color: var(--text-dark);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    transition: all 0.2s ease;
-}
-
-.btn-card:hover {
-    background-color: var(--primary-orange);
-    color: #fff;
-    border-color: var(--primary-orange);
-}
-
-/* ===== PIED DE PAGE ===== */
-.footer {
-    margin-top: 20px;
-    padding: 20px 0;  
-    border-top: 3px solid var(--primary-orange);
-    background-color: var(--bg-sand);  
-    width: 100%;  
-}
-
-.footer-bottom {
-    text-align: center;
-    max-width: 1300px; 
-    margin: 0 auto;  
-    padding: 0 20px;  
-}
-
-.footer-bottom p {
-    font-size: 14px;
-    color: var(--text-muted);
-}
-
-/* ==========================================
-   MODALE AUTHENTIFICATION (THEME OTACK'S GAMES)
-   ========================================== */
-
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(44, 34, 30, 0.75); /* Fond assombri basé sur --text-dark */
-    backdrop-filter: blur(4px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-    z-index: 2000;
-}
-
-.modal-overlay.active {
-    opacity: 1;
-    pointer-events: all;
-}
-
-.modal-card {
-    background-color: var(--card-bg);
-    color: var(--text-dark);
-    padding: 30px;
-    border-radius: 16px;
-    width: 90%;
-    max-width: 420px;
-    position: relative;
-    border: 2px solid var(--primary-orange);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-}
-
-.close-modal {
-    position: absolute;
-    top: 15px;
-    right: 20px;
-    background: none;
-    border: none;
-    color: var(--text-muted);
-    font-size: 26px;
-    cursor: pointer;
-    transition: color 0.2s ease;
-}
-
-.close-modal:hover {
-    color: var(--primary-orange);
-}
-
-.modal-card h3 {
-    font-family: var(--font-heading);
-    font-size: 26px;
-    font-weight: 700;
-    color: var(--text-dark);
-    text-align: center;
-    margin-bottom: 20px;
-}
-
+/* FORMULAIRES ET ALERTES */
 .input-group {
     margin-bottom: 16px;
 }
@@ -377,7 +224,7 @@ body {
     margin-bottom: 6px;
 }
 
-.input-group input {
+.input-group input, .input-group select {
     width: 100%;
     padding: 10px 14px;
     border-radius: 10px;
@@ -390,48 +237,10 @@ body {
     transition: border-color 0.2s ease;
 }
 
-.input-group input:focus {
+.input-group input:focus, .input-group select:focus {
     border-color: var(--primary-orange);
 }
 
-.btn-submit {
-    width: 100%;
-    padding: 12px 0;
-    background-color: var(--primary-orange);
-    color: #fff;
-    border: none;
-    border-radius: 20px;
-    font-weight: 600;
-    font-size: 14px;
-    cursor: pointer;
-    margin-top: 10px;
-    box-shadow: 0 4px 10px rgba(224, 83, 40, 0.3);
-    transition: transform 0.2s ease, background-color 0.2s ease;
-}
-
-.btn-submit:hover {
-    background-color: #c9441d;
-    transform: translateY(-2px);
-}
-
-.switch-text {
-    text-align: center;
-    margin-top: 18px;
-    font-size: 13px;
-    color: var(--text-muted);
-}
-
-.switch-text a {
-    color: var(--primary-orange);
-    font-weight: 600;
-    text-decoration: none;
-}
-
-.switch-text a:hover {
-    text-decoration: underline;
-}
-
-/* MESSAGES D'ALERTE */
 .alert {
     padding: 10px 14px;
     border-radius: 10px;
@@ -453,161 +262,37 @@ body {
     border: 1px solid #c3e6cb;
 }
 
-/* SELECTION AVATAR & CARTE PROFIL */
-.avatar-selector {
-    display: flex;
-    gap: 15px;
-    margin-top: 8px;
+/* FOOTER */
+.footer {
+    margin-top: auto;
+    padding: 20px 0;  
+    border-top: 3px solid var(--primary-orange);
+    background-color: var(--bg-sand);  
+    width: 100%;  
 }
 
-.avatar-selector label {
-    cursor: pointer;
-}
-
-.avatar-selector input[type="radio"] {
-    display: none;
-}
-
-.avatar-selector img {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    border: 3px solid transparent;
-    object-fit: cover;
-    transition: transform 0.2s ease, border-color 0.2s ease;
-}
-
-.avatar-selector input[type="radio"]:checked + img {
-    border-color: var(--primary-orange);
-    transform: scale(1.1);
-}
-
-.profile-card {
-    background-color: var(--card-bg);
-    border-radius: 16px;
-    padding: 40px;
-    width: 100%;
-    max-width: 650px;
-    margin: 30px auto;
-    border: 2px solid var(--primary-orange);
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
-}
-
-.profile-card h2 {
-    font-family: var(--font-heading);
-    color: var(--text-dark);
+.footer-bottom {
     text-align: center;
-    margin-bottom: 20px;
+    max-width: 1300px; 
+    margin: 0 auto;  
+    padding: 0 20px;  
 }
 
-.current-avatar-preview {
-    text-align: center;
-    margin-bottom: 20px;
+.footer-bottom p {
+    font-size: 14px;
+    color: var(--text-muted);
 }
 
-.current-avatar-preview img {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    border: 3px solid var(--primary-orange);
-    object-fit: cover;
-}
-
-/* AVATAR DANS LA NAVBAR */
-.nav-links .user-profile-link {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.nav-links .nav-avatar {
-    width: 50px !important;
-    height: 50px !important;
-    max-width: 50px !important;
-    max-height: 50px !important;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid var(--primary-orange);
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-    transition: transform 0.2s ease;
-}
-
-.nav-links .user-profile-link:hover .nav-avatar {
-    transform: scale(1.1);
-}
-/* ==========================================
-            ===== RESPONSIVE ===== 
-   ========================================== */
-@media (max-width: 600px) {
-    .footer {
-        padding: 15px 0;
-    }
-
-    .footer-bottom p {
-        font-size: 12px;
-    }
-}
-
+/* RESPONSIVE */
 @media (max-width: 768px) {
     .navbar {
         flex-direction: column;
         gap: 15px;
         padding: 15px 20px;
     }
-
     .nav-links {
         gap: 20px;
         flex-wrap: wrap;
         justify-content: center;
-    }
-
-    .nav-actions {
-        width: 100%;
-        justify-content: center;
-    }
-
-    .games-grid {
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-        gap: 12px;
-    }
-
-    .card-img-wrapper {
-        height: 110px;
-    }
-}
-
-@media (max-width: 480px) {
-    .logo-text {
-        font-size: 22px;
-    }
-
-    .games-grid {
-        grid-template-columns: 1fr 1fr;
-        gap: 10px;
-    }
-
-    .card-img-wrapper {
-        height: 90px;
-    }
-
-    .card-badge {
-        width: 28px;
-        height: 28px;
-        font-size: 11px;
-        bottom: -10px;
-        left: 8px;
-    }
-
-    .card-content h3 {
-        font-size: 11px;
-    }
-
-    .card-content p {
-        font-size: 10px;
-    }
-
-    .btn-card {
-        font-size: 10px;
-        padding: 6px 0;
     }
 }
