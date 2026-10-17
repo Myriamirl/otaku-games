@@ -61,3 +61,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
+
+// Nettoie l'URL des paramètres d'erreur/succès après le chargement
+if (window.location.search.includes('erreur=') || window.location.search.includes('succes=')) {
+    window.history.replaceState({}, document.title, window.location.pathname);
+}

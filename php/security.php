@@ -1,7 +1,17 @@
 <?php
+// Configuration sécurisée des cookies de session AVANT le session_start()=> renfo des cookies de session
 if (session_status() === PHP_SESSION_NONE) {
+    session_set_cookie_params([
+        'lifetime' => 0,             // Le cookie expire à la fermeture du navigateur
+        'path'     => '/',
+        'domain'   => '',            // Ton domaine actuel
+        'secure'   => isset($_SERVER['HTTPS']), // True si HTTPS est activé
+        'httponly' => true,          // Interdit l'accès au cookie via JavaScript (Anti-XSS)
+        'samesite' => 'Lax'          // Protection renforcée contre les attaques CSRF
+    ]);
     session_start();
 }
+
 
 /**
  * Génère un Token CSRF unique par session
@@ -24,22 +34,31 @@ function verify_csrf_token(?string $token): bool {
 }
 
 /**
- * Rate Limiting : Limitation des tentatives (Protection anti-force brute)
+ * Rate Limiting basé sur l'IP en BDD
  */
-function check_rate_limit(string $key, int $max_attempts = 5, int $decay_seconds = 900): bool {
-    $now = time();
-    if (!isset($_SESSION['rate_limits'][$key])) {
-        $_SESSION['rate_limits'][$key] = ['attempts' => 0, 'first_attempt' => $now];
+function check_ip_rate_limit(PDO $pdo, string $action_key = 'login_attempt', int $max_attempts = 10, int $decay_seconds = 900): bool {
+    $ip = $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1';
+    $now = date('Y-m-d H:i:s');
+
+    // Nettoyage automatique des enregistrements expirés
+    $stmtClean = $pdo->prepare("DELETE FROM rate_limits WHERE TIMESTAMPDIFF(SECOND, first_attempt, NOW()) > ?");
+    $stmtClean->execute([$decay_seconds]);
+
+    // Récupération des tentatives pour cette IP
+    $stmt = $pdo->prepare("SELECT id, attempts FROM rate_limits WHERE ip_address = ? AND action_key = ?");
+    $stmt->execute([$ip, $action_key]);
+    $record = $stmt->fetch();
+
+    if ($record) {
+        if ($record['attempts'] >= $max_attempts) {
+            return false; // IP bloquée temporairement
+        }
+        $stmtUpdate = $pdo->prepare("UPDATE rate_limits SET attempts = attempts + 1 WHERE id = ?");
+        $stmtUpdate->execute([$record['id']]);
+    } else {
+        $stmtInsert = $pdo->prepare("INSERT INTO rate_limits (ip_address, action_key, attempts, first_attempt) VALUES (?, ?, 1, ?)");
+        $stmtInsert->execute([$ip, $action_key, $now]);
     }
 
-    $limit = &$_SESSION['rate_limits'][$key];
-
-    if ($now - $limit['first_attempt'] > $decay_seconds) {
-        $limit['attempts'] = 0;
-        $limit['first_attempt'] = $now;
-    }
-
-    $limit['attempts']++;
-
-    return $limit['attempts'] <= $max_attempts;
+    return true;
 }

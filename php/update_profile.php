@@ -38,7 +38,7 @@ if (!preg_match('/^[\p{L}0-9 _-]{2,20}$/u', $pseudo)) {
 }
 
 //Whitelisting / Liste blanche sur l'avatar (Sécurité contre le Path Traversal)
-$dossier = __DIR__ . '/../asset/logo_avatar/';
+$dossier = __DIR__ . '/../assets/logo_avatar/';
 $avatars_fichiers = glob($dossier . 'avatar*.{jpg,jpeg,png,webp}', GLOB_BRACE);
 $avatars_valides = array_map('basename', $avatars_fichiers ?: []);
 

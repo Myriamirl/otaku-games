@@ -41,7 +41,7 @@ $token_csrf   = generate_csrf_token();
             <a href="#" class="nav-item"><i class="fa-solid fa-crown"></i> Leaderboard</a>
             <?php if ($est_connecte): ?>
                 <a href="profil.php" class="nav-item user-profile-link">
-                    <img src="asset/logo_avatar/<?= htmlspecialchars($_SESSION['avatar'] ?? 'avatar1.jpg') ?>" alt="Avatar" class="nav-avatar">
+                    <img src="assets/logo_avatar/<?= htmlspecialchars($_SESSION['avatar'] ?? 'avatar1.jpg') ?>" alt="Avatar" class="nav-avatar">
                     <span><?= htmlspecialchars($_SESSION['pseudo']) ?></span>
                 </a>
             <?php else: ?>
@@ -69,7 +69,7 @@ $token_csrf   = generate_csrf_token();
                     <path d="M0,8 C120,22 240,2 360,15 C480,28 600,3 720,12 C840,21 960,5 1080,16 C1140,22 1170,10 1200,8 L1200,472 C1170,465 1140,475 1080,468 C960,460 840,474 720,465 C600,456 480,470 360,462 C240,454 120,466 0,472 Z" />
                 </clipPath>
             </defs>
-            <image href="asset/logo_avatar/banniere_naruto.jpg" width="1200" height="480" preserveAspectRatio="xMidYMid slice" clip-path="url(#waveClip)" />
+            <image href="assets/logo_avatar/banniere_naruto.jpg" width="1200" height="480" preserveAspectRatio="xMidYMid slice" clip-path="url(#waveClip)" />
         </svg>
     </section>
 
@@ -87,7 +87,7 @@ $token_csrf   = generate_csrf_token();
             <!-- Carte 1 : UNDERCOVER -->
             <div class="game-card">
                 <div class="card-img-wrapper">
-                    <img src="asset/logo_avatar/logo_undercover.jpg" alt="Undercover" class="game-img">
+                    <img src="assets/logo_avatar/logo_undercover.jpg" alt="Undercover" class="game-img">
                     <div class="card-badge" style="background-color: #e05328;">
                         <i class="fa-solid fa-mask"></i>
                     </div>
@@ -96,7 +96,7 @@ $token_csrf   = generate_csrf_token();
                     <h3>UNDERCOVER</h3>
                     <p>Sauras-tu démasquer le traître?</p>
                     <?php if ($est_connecte): ?>
-                        <a href="undercover/php/undercover.php" class="btn-card">Jouer <i class="fa-solid fa-arrow-right"></i></a>
+                        <a href="undercover/pages/undercover.php" class="btn-card">Jouer <i class="fa-solid fa-arrow-right"></i></a>
                     <?php else: ?>
                         <button class="btn-card trigger-auth">Jouer <i class="fa-solid fa-arrow-right"></i></button>
                     <?php endif; ?>
@@ -106,7 +106,7 @@ $token_csrf   = generate_csrf_token();
             <!-- Carte 2 : ENCHÈRES -->
             <div class="game-card">
                 <div class="card-img-wrapper">
-                    <img src="asset/logo_avatar/logo_enchere.jpg" alt="Enchères" class="game-img">
+                    <img src="assets/logo_avatar/logo_enchere.jpg" alt="Enchères" class="game-img">
                     <div class="card-badge" style="background-color: #2c7a4a;">
                         <i class="fa-solid fa-gavel"></i>
                     </div>
@@ -125,7 +125,7 @@ $token_csrf   = generate_csrf_token();
             <!-- Carte 3 : COMBAT / ARÈNE -->
             <div class="game-card">
                 <div class="card-img-wrapper">
-                    <img src="asset/logo_avatar/logo_combat.jpg" alt="Combat / Arène" class="game-img">
+                    <img src="assets/logo_avatar/logo_combat.jpg" alt="Combat / Arène" class="game-img">
                     <div class="card-badge" style="background-color: #b84a2c;">
                         <i class="fa-solid fa-crosshairs"></i>
                     </div>
@@ -144,7 +144,7 @@ $token_csrf   = generate_csrf_token();
             <!-- Carte 4 : RPG / AVENTURE -->
             <div class="game-card">
                 <div class="card-img-wrapper">
-                    <img src="asset/logo_avatar/logo_rpg_aventure.jpg" alt="RPG / Aventure" class="game-img">
+                    <img src="assets/logo_avatar/logo_rpg_aventure.jpg" alt="RPG / Aventure" class="game-img">
                     <div class="card-badge" style="background-color: #2a6b8c;">
                         <i class="fa-solid fa-compass"></i>
                     </div>
@@ -163,7 +163,7 @@ $token_csrf   = generate_csrf_token();
             <!-- Carte 5 : COLLECTION -->
             <div class="game-card">
                 <div class="card-img-wrapper">
-                    <img src="asset/logo_avatar/logo_collection.jpg" alt="Collection" class="game-img">
+                    <img src="assets/logo_avatar/logo_collection.jpg" alt="Collection" class="game-img">
                     <div class="card-badge" style="background-color: #8a6a2c;">
                         <i class="fa-solid fa-layer-group"></i>
                     </div>
@@ -182,7 +182,7 @@ $token_csrf   = generate_csrf_token();
             <!-- Carte 6 : MINI-JEUX -->
             <div class="game-card">
                 <div class="card-img-wrapper">
-                    <img src="asset/logo_avatar/logo_minijeux.jpg" alt="Mini-Jeux" class="game-img">
+                    <img src="assets/logo_avatar/logo_minijeux.jpg" alt="Mini-Jeux" class="game-img">
                     <div class="card-badge" style="background-color: #6a3a8a;">
                         <i class="fa-solid fa-gamepad"></i>
                     </div>
@@ -201,136 +201,139 @@ $token_csrf   = generate_csrf_token();
         </div>
     </main>
 
-<!-- ===== MODALE CONNEXION / INSCRIPTION ===== -->
-<div id="authModal" class="modal-overlay <?= (!empty($_GET['erreur']) || !empty($_GET['succes'])) ? 'active' : '' ?>">
-    <div class="modal-card">
-        <button class="close-modal" id="closeAuthBtn">&times;</button>
+    <!------------------------------------ ===== MODALE CONNEXION / INSCRIPTION ===== ----------------------------------->
 
-        <?php 
-        $messages_erreur = [
-            'champs_vides'       => 'Veuillez remplir tous les champs obligatoires, y compris le choix de l\'avatar.',
-            'email_invalide'     => 'L\'adresse email saisie est invalide.',
-            'mdp_mismatch'      => 'Les mots de passe ne correspondent pas.',
-            'pseudo_longueur'    => 'Le pseudo doit contenir entre 2 et 20 caractères.',
-            'mdp_court'          => 'Le mot de passe doit faire 8 caractères min., avec 1 majuscule et 1 chiffre.',
-            'pseudo_pris'        => 'Ce pseudo ou cet email est déjà utilisé.',
-            'identifiants_inc'   => 'Identifiants incorrects.',
-            'trop_de_tentatives' => 'Trop de tentatives échouées. Veuillez patienter 15 minutes.',
-            'erreur_serveur'     => 'Une erreur de sécurité ou serveur est survenue.'
-        ];
+    <div id="authModal" class="modal-overlay <?= (!empty($_GET['erreur']) || !empty($_GET['succes'])) ? 'active' : '' ?>">
+        <div class="modal-card">
+            <button class="close-modal" id="closeAuthBtn">&times;</button>
 
-        $messages_succes = [
-            'inscr_ok' => 'Compte créé avec succès ! Vous pouvez vous connecter.'
-        ];
-        ?>
+            <?php
+            $messages_erreur = [
+                'champs_vides'       => 'Veuillez remplir tous les champs obligatoires, y compris le choix de l\'avatar.',
+                'email_invalide'     => 'L\'adresse email saisie est invalide.',
+                'mdp_mismatch'      => 'Les mots de passe ne correspondent pas.',
+                'pseudo_longueur'    => 'Le pseudo doit contenir entre 2 et 20 caractères.',
+                'mdp_court'          => 'Le mot de passe doit faire 8 caractères min., avec 1 majuscule et 1 chiffre.',
+                'pseudo_pris'        => 'Ce pseudo ou cet email est déjà utilisé.',
+                'identifiants_inc'   => 'Identifiants incorrects.',
+                'trop_de_tentatives' => 'Trop de tentatives échouées. Veuillez patienter 15 minutes.',
+                'erreur_serveur'     => 'Une erreur de sécurité ou serveur est survenue.'
+            ];
 
-        <?php if (isset($_GET['erreur']) && isset($messages_erreur[$_GET['erreur']])): ?>
-            <div class="alert alert-error"><?= htmlspecialchars($messages_erreur[$_GET['erreur']]) ?></div>
-        <?php endif; ?>
+            $messages_succes = [
+                'inscr_ok' => 'Compte créé avec succès ! Vous pouvez vous connecter.'
+            ];
+            ?>
 
-        <?php if (isset($_GET['succes']) && isset($messages_succes[$_GET['succes']])): ?>
-            <div class="alert alert-success"><?= htmlspecialchars($messages_succes[$_GET['succes']]) ?></div>
-        <?php endif; ?>
+            <?php if (isset($_GET['erreur']) && isset($messages_erreur[$_GET['erreur']])): ?>
+                <div class="alert alert-error"><?= htmlspecialchars($messages_erreur[$_GET['erreur']]) ?></div>
+            <?php endif; ?>
 
-        <!-- Formulaire de Connexion -->
-        <div id="formConnexion">
-            <h3>Connexion</h3>
-            <form action="php/auth.php" method="POST">
-                <input type="hidden" name="action" value="connexion">
-                <input type="hidden" name="csrf_token" value="<?= $token_csrf ?>">
-                
-                <div class="input-group">
-                    <label>Pseudo</label>
-                    <input type="text" name="pseudo" required>
-                </div>
-                <div class="input-group">
-                    <label>Mot de passe</label>
-                    <input type="password" name="mot_de_passe" required>
-                </div>
-                <button type="submit" class="btn-submit">Se connecter</button>
-            </form>
-            <p class="switch-text">Pas de compte ? <a href="#" id="showInscription">S'inscrire</a></p>
-        </div>
+            <?php if (isset($_GET['succes']) && isset($messages_succes[$_GET['succes']])): ?>
+                <div class="alert alert-success"><?= htmlspecialchars($messages_succes[$_GET['succes']]) ?></div>
+            <?php endif; ?>
 
-        <!-- Formulaire d'Inscription -->
-        <div id="formInscription" style="display: none;">
-            <h3>Inscription</h3>
-            <form action="php/auth.php" method="POST">
-                <input type="hidden" name="action" value="inscription">
-                <input type="hidden" name="csrf_token" value="<?= $token_csrf ?>">
-                
-                <div class="input-group">
-                    <label>Nom</label>
-                    <input type="text" name="nom" required placeholder="Votre nom">
-                </div>
+            <!-- Formulaire de Connexion -->
+            <div id="formConnexion">
+                <h3>Connexion</h3>
+                <form action="php/auth.php" method="POST">
+                    <input type="hidden" name="action" value="connexion">
+                    <input type="hidden" name="csrf_token" value="<?= $token_csrf ?>">
 
-                <div class="input-group">
-                    <label>Prénom</label>
-                    <input type="text" name="prenom" required placeholder="Votre prénom">
-                </div>
-
-                <div class="input-group">
-                    <label>Adresse Email</label>
-                    <input type="email" name="email" required placeholder="exemple@mail.com">
-                </div>
-
-                <div class="input-group">
-                    <label>Date de naissance</label>
-                    <input type="date" name="date_naissance" required>
-                </div>
-
-                <div class="input-group">
-                    <label>Pseudo</label>
-                    <input type="text" name="pseudo" required placeholder="Entre 2 et 20 caractères">
-                </div>
-
-                <div class="input-group">
-                    <label>Mot de passe</label>
-                    <input type="password" name="mot_de_passe" required placeholder="8 caractères min., 1 majuscule, 1 chiffre">
-                </div>
-
-                <div class="input-group">
-                    <label>Confirmer le mot de passe</label>
-                    <input type="password" name="confirmation" required>
-                </div>
-
-                <!-- Choix de l'avatar OBLIGATOIRE  -->
-                <div class="input-group">
-                    <label>Choisis ton avatar <span style="color: var(--primary-orange)">*</span></label>
-                    <div class="avatar-selector">
-                        <?php
-                        $dossier = 'asset/logo_avatar/';
-                        $avatars = glob($dossier . 'avatar*.{jpg,jpeg,png,webp}', GLOB_BRACE);
-                        if ($avatars):
-                            foreach ($avatars as $chemin):
-                                $nom = basename($chemin);
-                        ?>
-                                <label>
-                                    <input type="radio" name="avatar" value="<?= htmlspecialchars($nom) ?>" required>
-                                    <img src="<?= htmlspecialchars($chemin) ?>" alt="Avatar">
-                                </label>
-                        <?php
-                            endforeach;
-                        endif;
-                        ?>
+                    <div class="input-group">
+                        <label>Pseudo</label>
+                        <input type="text" name="pseudo" required>
                     </div>
-                </div>
+                    <div class="input-group">
+                        <label>Mot de passe</label>
+                        <input type="password" name="mot_de_passe" required>
+                    </div>
+                    <button type="submit" class="btn-submit">Se connecter</button>
+                </form>
+                <p class="switch-text">Pas de compte ? <a href="#" id="showInscription">S'inscrire</a></p>
+            </div>
 
-                <button type="submit" class="btn-submit">Créer mon compte</button>
-            </form>
-            <p class="switch-text">Déjà un compte ? <a href="#" id="showConnexion">Se connecter</a></p>
+            <!-- Formulaire d'Inscription -->
+            <div id="formInscription" style="display: none;">
+                <h3>Inscription</h3>
+                <form action="php/auth.php" method="POST">
+                    <input type="hidden" name="action" value="inscription">
+                    <input type="hidden" name="csrf_token" value="<?= $token_csrf ?>">
+
+                    <div class="input-group">
+                        <label>Nom</label>
+                        <input type="text" name="nom" required placeholder="Votre nom">
+                    </div>
+
+                    <div class="input-group">
+                        <label>Prénom</label>
+                        <input type="text" name="prenom" required placeholder="Votre prénom">
+                    </div>
+
+                    <div class="input-group">
+                        <label>Adresse Email</label>
+                        <input type="email" name="email" required placeholder="exemple@mail.com">
+                    </div>
+
+                    <div class="input-group">
+                        <label>Date de naissance</label>
+                        <input type="date" name="date_naissance" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Pseudo</label>
+                        <input type="text" name="pseudo" required placeholder="Entre 2 et 20 caractères">
+                    </div>
+
+                    <div class="input-group">
+                        <label>Mot de passe</label>
+                        <input type="password" name="mot_de_passe" required placeholder="••••••••">
+                        <span class="password-hint">8 caractères minuscules, 1 majuscule, 1 chiffre</span>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Confirmer le mot de passe</label>
+                        <input type="password" name="confirmation" required placeholder="••••••••">
+                    </div>
+
+                    <!-- Choix de l'avatar OBLIGATOIRE  -->
+                    <div class="input-group">
+                        <label>Choisis ton avatar <span style="color: var(--primary-orange)">*</span></label>
+                        <div class="avatar-selector">
+                            <?php
+                            $dossier = 'assets/logo_avatar/';
+                            $avatars = glob($dossier . 'avatar*.{jpg,jpeg,png,webp}', GLOB_BRACE);
+                            if ($avatars):
+                                foreach ($avatars as $index => $chemin):
+                                    $nom = basename($chemin);
+                                    $checked = ($index === 0) ? 'checked' : '';
+                            ?>
+                                    <label>
+                                        <input type="radio" name="avatar" value="<?= htmlspecialchars($nom) ?>" <?= $checked ?> required>
+                                        <img src="<?= htmlspecialchars($chemin) ?>" alt="Avatar">
+                                    </label>
+                            <?php
+                                endforeach;
+                            endif;
+                            ?>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-submit">Créer mon compte</button>
+                </form>
+                <p class="switch-text">Déjà un compte ? <a href="#" id="showConnexion">Se connecter</a></p>
+            </div>
         </div>
     </div>
-</div>
 
-        <!-- PIED DE PAGE -->
-        <footer class="footer">
-            <div class="footer-bottom">
-                <p>&copy; 2026 Otak's Games. Tous droits réservés. | Conçu avec <i class="fa-solid fa-heart" style="color: #e05328;"></i> pour la communauté Ehpad No Sekai.</p>
-            </div>
-        </footer>
+    <!-- PIED DE PAGE -->
+    <footer class="footer">
+        <div class="footer-bottom">
+            <p>&copy; 2026 Otak's Games. Tous droits réservés. | Conçu avec <i class="fa-solid fa-heart" style="color: #e05328;"></i> pour la communauté Ehpad No Sekai.</p>
+        </div>
+    </footer>
 
-        <script src="js/script.js"></script>
+    <script src="js/script.js"></script>
 </body>
 
 </html>

@@ -1,5 +1,4 @@
 <?php
-session_start();
 require_once __DIR__ . '/db_connect.php';
 require_once __DIR__ . '/php/security.php';
 
@@ -63,17 +62,18 @@ $user = $stmt->fetch();
 
             <form action="php/update_profile.php" method="POST">
                 <input type="hidden" name="csrf_token" value="<?= $token_csrf ?>">
+                
                 <!-- Aperçu de l'avatar actuel -->
                 <div class="current-avatar-preview">
-                    <img src="asset/logo_avatar/<?= htmlspecialchars($user['avatar'] ?? 'avatar1.jpg') ?>" alt="Avatar actuel">
+                    <img src="assets/logo_avatar/<?= htmlspecialchars($user['avatar'] ?? 'avatar1.jpg') ?>" alt="Avatar actuel">
                 </div>
 
-                <!-- Sélection dynamique de TOUS les avatars -->
+                <!-- Sélection dynamique des avatars -->
                 <div class="input-group">
-                    <label>Changer d'avatar</label>
+                    <label>Changer d'avatar <span style="color: var(--primary-orange)">*</span></label>
                     <div class="avatar-selector">
                         <?php
-                        $dossier = 'asset/logo_avatar/';
+                        $dossier = 'assets/logo_avatar/';
                         $fichiers = glob($dossier . 'avatar*.{jpg,jpeg,png,webp}', GLOB_BRACE);
 
                         if ($fichiers):
@@ -82,7 +82,7 @@ $user = $stmt->fetch();
                                 $checked = ($user['avatar'] === $nom) ? 'checked' : '';
                         ?>
                                 <label>
-                                    <input type="radio" name="avatar" value="<?= htmlspecialchars($nom) ?>" <?= $checked ?>>
+                                    <input type="radio" name="avatar" value="<?= htmlspecialchars($nom) ?>" <?= $checked ?> required>
                                     <img src="<?= htmlspecialchars($chemin) ?>" alt="Avatar">
                                 </label>
                             <?php
@@ -94,7 +94,27 @@ $user = $stmt->fetch();
                     </div>
                 </div>
 
-                <!-- Modification du pseudo -->
+                <!-- Informations personnelles -->
+                <div class="input-group">
+                    <label for="nom">Nom</label>
+                    <input type="text" id="nom" name="nom" value="<?= htmlspecialchars($user['nom']) ?>" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="prenom">Prénom</label>
+                    <input type="text" id="prenom" name="prenom" value="<?= htmlspecialchars($user['prenom']) ?>" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="email">Adresse Email</label>
+                    <input type="email" id="email" name="email" value="<?= htmlspecialchars($user['email']) ?>" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="date_naissance">Date de naissance</label>
+                    <input type="date" id="date_naissance" name="date_naissance" value="<?= htmlspecialchars($user['date_naissance']) ?>" required>
+                </div>
+
                 <div class="input-group">
                     <label for="pseudo">Changer de Pseudo</label>
                     <input type="text" id="pseudo" name="pseudo" value="<?= htmlspecialchars($user['pseudo']) ?>" required>
@@ -102,7 +122,7 @@ $user = $stmt->fetch();
 
                 <hr style="border: 0; border-top: 1px solid #dcd0be; margin: 20px 0;">
 
-                <!-- Modification du mot de passe -->
+                <!-- Modification du mot de passe (optionnel) -->
                 <div class="input-group">
                     <label for="nouveau_mdp">Nouveau mot de passe (laisser vide pour conserver l'actuel)</label>
                     <input type="password" id="nouveau_mdp" name="nouveau_mdp">
@@ -120,7 +140,7 @@ $user = $stmt->fetch();
 
     <footer class="footer">
         <div class="footer-bottom">
-            <p>&copy; 2026 Otak's Games. Tous droits réservés.| Conçu avec <i class="fa-solid fa-heart" style="color: #e05328;"></i> pour la communauté Ehpad No Sekai.</p>
+            <p>&copy; 2026 Otak's Games. Tous droits réservés. | Conçu avec <i class="fa-solid fa-heart" style="color: #e05328;"></i> pour la communauté Ehpad No Sekai.</p>
         </div>
     </footer>
 

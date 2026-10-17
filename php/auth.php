@@ -11,7 +11,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !verify_csrf_token($csrf_token)) {
     exit();
 }
 
-// --- TRAITEMENT INSCRIPTION ---
+// ----------------------------------------- TRAITEMENT INSCRIPTION -----------------------------------------------------------
+
 if ($action === 'inscription') {
     $nom            = trim($_POST['nom'] ?? '');
     $prenom         = trim($_POST['prenom'] ?? '');
@@ -53,7 +54,7 @@ if ($action === 'inscription') {
     }
 
     // Validation de l'avatar sur Liste Blanche (Whitelisting contre Path Traversal)
-    $dossier = __DIR__ . '/../asset/logo_avatar/';
+    $dossier = __DIR__ . '/../assets/logo_avatar/';
     $avatars_fichiers = glob($dossier . 'avatar*.{jpg,jpeg,png,webp}', GLOB_BRACE);
     $avatars_valides = array_map('basename', $avatars_fichiers ?: []);
 
@@ -96,10 +97,11 @@ if ($action === 'inscription') {
     }
 }
 
-// --- TRAITEMENT CONNEXION ---
+// ----------------------------------------- TRAITEMENT CONNEXION -----------------------------------------------------------
+
 if ($action === 'connexion') {
-    // Rate Limiting : max 5 essais / 15min
-    if (!check_rate_limit('login_attempt', 5, 900)) {
+    // 1. Vérification du Rate Limit par IP
+    if (!check_ip_rate_limit($pdo, 'login_attempt', 10, 900)) {
         header('Location: ../index.php?erreur=trop_de_tentatives');
         exit();
     }
@@ -112,25 +114,62 @@ if ($action === 'connexion') {
         exit();
     }
 
-    $stmt = $pdo->prepare("SELECT id, pseudo, mot_de_passe, avatar FROM utilisateur WHERE pseudo = ?");
+    //Recherche de l'utilisateur
+    $stmt = $pdo->prepare("SELECT id, pseudo, mot_de_passe, avatar, tentatives_echecs, bloque_jusqua, compte_suspendu FROM utilisateur WHERE pseudo = ?");
     $stmt->execute([$pseudo]);
     $user = $stmt->fetch();
 
-    if ($user && password_verify($mot_de_passe, $user['mot_de_passe'])) {
-        session_regenerate_id(true);
-        $_SESSION['user_id'] = $user['id'];
-        $_SESSION['pseudo']  = $user['pseudo'];
-        $_SESSION['avatar']  = $user['avatar'];
+    if ($user) {
+        //Vérifier si le compte est suspendu définitivement
+        if ($user['compte_suspendu'] == 1) {
+            header('Location: ../index.php?erreur=erreur_serveur');
+            exit();
+        }
 
-        unset($_SESSION['rate_limits']['login_attempt']);
+        //Vérifier si le compte est temporairement bloqué
+        if (!empty($user['bloque_jusqua']) && strtotime($user['bloque_jusqua']) > time()) {
+            header('Location: ../index.php?erreur=trop_de_tentatives');
+            exit();
+        }
 
-        header('Location: ../index.php');
-        exit();
+        // Vérification du mot de passe
+        if (password_verify($mot_de_passe, $user['mot_de_passe'])) {
+            // Reussite : Réinitialisation des compteurs
+            $stmtReset = $pdo->prepare("UPDATE utilisateur SET tentatives_echecs = 0, bloque_jusqua = NULL WHERE id = ?");
+            $stmtReset->execute([$user['id']]);
+
+            session_regenerate_id(true);
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['pseudo']  = $user['pseudo'];
+            $_SESSION['avatar']  = $user['avatar'];
+
+            header('Location: ../index.php');
+            exit();
+        } else {
+            // Echec : Incrémentation des tentatives
+            $echecs = $user['tentatives_echecs'] + 1;
+
+            if ($echecs >= 10) {
+                // 10 échecs -> Suspension permanente du compte
+                $stmtLock = $pdo->prepare("UPDATE utilisateur SET tentatives_echecs = ?, compte_suspendu = 1 WHERE id = ?");
+                $stmtLock->execute([$echecs, $user['id']]);
+            } else if ($echecs >= 5) {
+                // 5 échecs -> Blocage temporaire de 15 minutes
+                $bloque_jusqua = date('Y-m-d H:i:s', strtotime('+15 minutes'));
+                $stmtLock = $pdo->prepare("UPDATE utilisateur SET tentatives_echecs = ?, bloque_jusqua = ? WHERE id = ?");
+                $stmtLock->execute([$echecs, $bloque_jusqua, $user['id']]);
+            } else {
+                $stmtLock = $pdo->prepare("UPDATE utilisateur SET tentatives_echecs = ? WHERE id = ?");
+                $stmtLock->execute([$echecs, $user['id']]);
+            }
+
+            header('Location: ../index.php?erreur=identifiants_inc');
+            exit();
+        }
     } else {
         header('Location: ../index.php?erreur=identifiants_inc');
         exit();
     }
 }
-
 header('Location: ../index.php');
 exit();
