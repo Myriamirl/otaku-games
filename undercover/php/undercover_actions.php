@@ -17,7 +17,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !verify_csrf_token($csrf_token)) {
     exit();
 }
 
-// === CRÉER UN SALON ===
+//------------------------------------------------------------------------------------------------------------------------------
+// ==================================== CRÉER UN SALON =====================================================================
+//------------------------------------------------------------------------------------------------------------------------------
+
 if ($action === 'creer') {
     $univers_id    = intval($_POST['univers_id'] ?? 1);
     $nb_undercover = intval($_POST['nb_undercover'] ?? 1);
@@ -53,7 +56,9 @@ if ($action === 'creer') {
     }
 }
 
-// === REJOINDRE UN SALON ===
+//------------------------------------------------------------------------------------------------------------------------------
+// ================================ REJOINDRE UN SALON ============================================================================
+//------------------------------------------------------------------------------------------------------------------------------
 if ($action === 'rejoindre') {
     $code_room = strtoupper(trim($_POST['code_room'] ?? ''));
 
@@ -83,7 +88,10 @@ if ($action === 'rejoindre') {
     exit();
 }
 
-// === LANCER LA PARTIE (TIRAGE DE DUO LOGIQUE) ===
+//------------------------------------------------------------------------------------------------------------------------------
+// ==================================== LANCER LA PARTIE ====================================================================
+//------------------------------------------------------------------------------------------------------------------------------
+
 if ($action === 'lancer') {
     $code_room = $_POST['code_room'] ?? '';
 
@@ -96,9 +104,15 @@ if ($action === 'lancer') {
         exit();
     }
 
-    $stmtJoueurs = $pdo->prepare("SELECT id FROM partie_joueur WHERE partie_id = ? ORDER BY id ASC");
+    $stmtJoueurs = $pdo->prepare("SELECT id, utilisateur_id FROM partie_joueur WHERE partie_id = ? ORDER BY id ASC");
     $stmtJoueurs->execute([$partie['id']]);
     $joueurs = $stmtJoueurs->fetchAll();
+
+    // SÉCURITÉ : Seul l'hôte (1er joueur du salon) lance la partie
+    if (empty($joueurs) || $joueurs[0]['utilisateur_id'] != $user_id) {
+        header('Location: ../pages/undercover.php?code=' . $code_room . '&erreur=Seul+l+hote+peut+lancer');
+        exit();
+    }
 
     $total_joueurs = count($joueurs);
     $nb_undercover = intval($partie['nb_undercover']);
@@ -108,23 +122,18 @@ if ($action === 'lancer') {
         exit();
     }
 
-    // Sélection d'une paire logique dans paire_undercover
+    // Sélection de la paire dans la BDD
     $stmtPaire = $pdo->prepare("SELECT personnage_1_id, personnage_2_id FROM paire_undercover WHERE univers_id = ? ORDER BY RAND() LIMIT 1");
     $stmtPaire->execute([$partie['univers_id']]);
     $paire = $stmtPaire->fetch();
 
     if (!$paire) {
-        header('Location: ../pages/undercover.php?code=' . $code_room . '&erreur=Aucune+paire+definie+dans+cet+univers');
+        header('Location: ../pages/undercover.php?code=' . $code_room . '&erreur=Aucune+paire+disponible');
         exit();
     }
 
-    if (rand(0, 1) === 0) {
-        $id_mot_civil = $paire['personnage_1_id'];
-        $id_mot_undercover = $paire['personnage_2_id'];
-    } else {
-        $id_mot_civil = $paire['personnage_2_id'];
-        $id_mot_undercover = $paire['personnage_1_id'];
-    }
+    $id_mot_civil = (rand(0, 1) === 0) ? $paire['personnage_1_id'] : $paire['personnage_2_id'];
+    $id_mot_undercover = ($id_mot_civil === $paire['personnage_1_id']) ? $paire['personnage_2_id'] : $paire['personnage_1_id'];
 
     shuffle($joueurs);
 
@@ -139,10 +148,8 @@ if ($action === 'lancer') {
             $stmtRole->execute([$role, $mot_id, $j['id']]);
         }
 
-        $premier_joueur_id = $joueurs[0]['id'];
-
         $stmtStatus = $pdo->prepare("UPDATE partie_undercover SET statut = 'en_cours', tour_actuel = 1, joueur_actuel_id = ? WHERE id = ?");
-        $stmtStatus->execute([$premier_joueur_id, $partie['id']]);
+        $stmtStatus->execute([$joueurs[0]['id'], $partie['id']]);
 
         $pdo->commit();
         header('Location: ../pages/undercover.php?code=' . $code_room);
@@ -150,12 +157,15 @@ if ($action === 'lancer') {
     } catch (Exception $e) {
         $pdo->rollBack();
         error_log($e->getMessage());
-        header('Location: ../pages/undercover.php?code=' . $code_room . '&erreur=Erreur+lancement');
+        header('Location: ../pages/undercover.php?code=' . $code_room . '&erreur=Erreur+de+lancement');
         exit();
     }
 }
 
-// === POSTER UN INDICE ===
+//------------------------------------------------------------------------------------------------------------------------------
+// ==================================== POSTER UN INDICE ====================================================================
+//------------------------------------------------------------------------------------------------------------------------------
+
 if ($action === 'indice') {
     $code_room = $_POST['code_room'] ?? '';
     $contenu   = trim(htmlspecialchars(strip_tags($_POST['contenu'] ?? ''), ENT_QUOTES, 'UTF-8'));
@@ -209,7 +219,10 @@ if ($action === 'indice') {
     }
 }
 
-// === VOTER ===
+//------------------------------------------------------------------------------------------------------------------------------
+// ==================================== VOTER ====================================================================
+//------------------------------------------------------------------------------------------------------------------------------
+
 if ($action === 'voter') {
     $code_room = $_POST['code_room'] ?? '';
     $id_cible  = intval($_POST['id_cible'] ?? 0);

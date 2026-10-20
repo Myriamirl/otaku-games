@@ -12,6 +12,12 @@ $token_csrf = generate_csrf_token();
 $stmt = $pdo->prepare("SELECT pseudo, email, nom, prenom, date_naissance, avatar FROM utilisateur WHERE id = ?");
 $stmt->execute([$_SESSION['user_id']]);
 $user = $stmt->fetch();
+
+//Configuration Header
+$page_title = "Mon Profil · Otak's Games";
+
+//Import du Header
+require_once __DIR__ . '/includes/header.php';
 ?>
 
 <!DOCTYPE html>
@@ -29,26 +35,6 @@ $user = $stmt->fetch();
 </head>
 
 <body>
-
-    <header class="navbar">
-        <div class="logo-container">
-            <svg class="konoha-logo" viewBox="0 0 100 100">
-                <path d="M50 10 C 25 10, 10 25, 10 50 C 10 75, 25 90, 50 90 C 75 90, 90 75, 90 50 C 90 35, 80 25, 70 20 C 60 15, 45 20, 40 30 C 35 40, 40 55, 50 60 C 60 65, 70 58, 68 48 C 66 38, 52 38, 50 48" fill="none" stroke="#e05328" stroke-width="8" stroke-linecap="round" />
-                <path d="M75 15 L 90 5" stroke="#e05328" stroke-width="8" stroke-linecap="round" />
-            </svg>
-            <span class="logo-text">Otak’s Games</span>
-        </div>
-
-        <nav class="nav-links">
-            <a href="index.php" class="nav-item">Accueil</a>
-            <a href="profil.php" class="nav-item active"><i class="fa-solid fa-user"></i> Mon compte</a>
-        </nav>
-
-        <div class="nav-actions">
-            <a href="php/deconnexion.php" class="btn-connexion"><i class="fa-solid fa-right-from-bracket"></i> Déconnexion</a>
-        </div>
-    </header>
-
     <main class="games-section">
         <div class="profile-card">
             <h2>Mon Profil</h2>

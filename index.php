@@ -8,6 +8,12 @@ require_once __DIR__ . '/php/security.php';
 // Définir les variables d'état pour la page
 $est_connecte = isset($_SESSION['user_id']);
 $token_csrf   = generate_csrf_token();
+
+// Configuration Header
+$page_title = "Accueil · Otak's Games";
+
+// Import du Header
+require_once __DIR__ . '/includes/header.php';
 ?>
 
 <!DOCTYPE html>
@@ -25,42 +31,6 @@ $token_csrf   = generate_csrf_token();
 </head>
 
 <body>
-
-    <!-- ENTÊTE / NAVBAR -->
-    <header class="navbar">
-        <div class="logo-container">
-            <svg class="konoha-logo" viewBox="0 0 100 100">
-                <path d="M50 10 C 25 10, 10 25, 10 50 C 10 75, 25 90, 50 90 C 75 90, 90 75, 90 50 C 90 35, 80 25, 70 20 C 60 15, 45 20, 40 30 C 35 40, 40 55, 50 60 C 60 65, 70 58, 68 48 C 66 38, 52 38, 50 48" fill="none" stroke="#e05328" stroke-width="8" stroke-linecap="round" />
-                <path d="M75 15 L 90 5" stroke="#e05328" stroke-width="8" stroke-linecap="round" />
-            </svg>
-            <span class="logo-text">Otak’s Games</span>
-        </div>
-
-        <nav class="nav-links">
-            <a href="index.php" class="nav-item active">Accueil</a>
-            <a href="#" class="nav-item"><i class="fa-solid fa-crown"></i> Leaderboard</a>
-            <?php if ($est_connecte): ?>
-                <a href="profil.php" class="nav-item user-profile-link">
-                    <img src="assets/logo_avatar/<?= htmlspecialchars($_SESSION['avatar'] ?? 'avatar1.jpg') ?>" alt="Avatar" class="nav-avatar">
-                    <span><?= htmlspecialchars($_SESSION['pseudo']) ?></span>
-                </a>
-            <?php else: ?>
-                <a href="#" class="nav-item trigger-auth">
-                    <i class="fa-solid fa-user"></i> Mon compte
-                </a>
-            <?php endif; ?>
-        </nav>
-
-        <div class="nav-actions">
-            <button class="search-btn" aria-label="Rechercher"><i class="fa-solid fa-magnifying-glass"></i></button>
-            <?php if ($est_connecte): ?>
-                <a href="php/deconnexion.php" class="btn-connexion"><i class="fa-solid fa-right-from-bracket"></i> Déconnexion</a>
-            <?php else: ?>
-                <button class="btn-connexion" id="openAuthBtn"><i class="fa-solid fa-right-to-bracket"></i> Connexion</button>
-            <?php endif; ?>
-        </div>
-    </header>
-
     <!-- BANNIÈRE HERO DE KONOHA -->
     <section class="hero-banner">
         <svg class="wave-svg" viewBox="0 0 1200 480" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
@@ -334,6 +304,10 @@ $token_csrf   = generate_csrf_token();
     </footer>
 
     <script src="js/script.js"></script>
+    <?php
+    
+// Import du Footer
+require_once __DIR__ . '/includes/footer.php';
+?>
 </body>
-
 </html>

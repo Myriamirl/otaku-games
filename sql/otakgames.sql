@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : sam. 17 oct. 2026 à 13:06
+-- Généré le : mar. 20 oct. 2026 à 16:34
 -- Version du serveur : 8.4.7
 -- Version de PHP : 8.3.28
 
@@ -73,15 +73,6 @@ CREATE TABLE IF NOT EXISTS `indice` (
   KEY `partie_joueur_id` (`partie_joueur_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Déchargement des données de la table `indice`
---
-
-INSERT INTO `indice` (`id`, `partie_joueur_id`, `contenu`, `tour_numero`) VALUES
-(1, 8, 'nul', 1),
-(2, 7, 'dire', 2),
-(3, 8, 'fqddf', 2);
-
 -- --------------------------------------------------------
 
 --
@@ -97,15 +88,14 @@ CREATE TABLE IF NOT EXISTS `leaderboard` (
   `victoires` int DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `utilisateur_id` (`utilisateur_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `leaderboard`
 --
 
 INSERT INTO `leaderboard` (`id`, `utilisateur_id`, `points_totaux`, `parties_jouees`, `victoires`) VALUES
-(1, 1, 0, 0, 0),
-(2, 2, 0, 0, 0);
+(3, 3, 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -252,29 +242,14 @@ CREATE TABLE IF NOT EXISTS `partie_joueur` (
   KEY `partie_id` (`partie_id`),
   KEY `utilisateur_id` (`utilisateur_id`),
   KEY `personnage_id` (`personnage_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `partie_joueur`
 --
 
 INSERT INTO `partie_joueur` (`id`, `partie_id`, `utilisateur_id`, `personnage_id`, `role`, `vivant`) VALUES
-(1, 1, 1, NULL, NULL, 1),
-(2, 2, 2, NULL, NULL, 1),
-(3, 3, 1, NULL, NULL, 1),
-(4, 3, 2, NULL, NULL, 1),
-(5, 4, 1, 49, 'undercover', 1),
-(6, 4, 2, 64, 'civil', 1),
-(7, 5, 1, 6, 'civil', 1),
-(8, 5, 2, 60, 'undercover', 1),
-(9, 6, 1, NULL, NULL, 1),
-(10, 7, 1, NULL, NULL, 1),
-(11, 8, 1, NULL, NULL, 1),
-(12, 8, 2, NULL, NULL, 1),
-(13, 9, 1, 122, 'civil', 1),
-(14, 9, 2, 73, 'undercover', 1),
-(15, 10, 2, 5, 'civil', 1),
-(16, 10, 1, 52, 'undercover', 1);
+(17, 11, 3, NULL, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -297,7 +272,7 @@ CREATE TABLE IF NOT EXISTS `partie_undercover` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `code_room` (`code_room`),
   KEY `univers_id` (`univers_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `partie_undercover`
@@ -313,7 +288,8 @@ INSERT INTO `partie_undercover` (`id`, `code_room`, `univers_id`, `mode`, `statu
 (7, 'NCFJO3', 1, 'Original', 'attente', 5, 1, 1, NULL, 1),
 (8, 'WE5T42', 1, 'Original', 'attente', 4, 2, 2, NULL, 1),
 (9, '5EBTN7', 2, 'Original', 'en_cours', 3, 2, 1, 14, 1),
-(10, 'MO32FK', 1, 'Original', 'en_cours', 3, 3, 1, 16, 1);
+(10, 'MO32FK', 1, 'Original', 'en_cours', 3, 3, 1, 16, 1),
+(11, 'D9BX8W', 1, 'Original', 'attente', 3, 2, 1, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -337,164 +313,188 @@ CREATE TABLE IF NOT EXISTS `personnage` (
 --
 
 INSERT INTO `personnage` (`id`, `univers_id`, `nom`, `prix_base`, `image`) VALUES
-(1, 1, 'Naruto', 45000, NULL),
-(2, 1, 'Sasuke', 45000, NULL),
-(3, 1, 'Itachi', 50000, NULL),
-(4, 1, 'Shisui', 42000, NULL),
-(5, 1, 'Jiraya', 38000, NULL),
-(6, 1, 'Orochimaru', 40000, NULL),
-(7, 1, 'Tsunade', 38000, NULL),
-(8, 1, 'Sakura', 28000, NULL),
-(9, 1, 'Kakashi', 42000, NULL),
-(10, 1, 'Obito', 45000, NULL),
-(11, 1, 'Hashirama', 50000, NULL),
-(12, 1, 'Madara', 50000, NULL),
-(13, 1, 'Minato', 48000, NULL),
-(14, 1, 'Tobirama', 45000, NULL),
-(15, 1, 'Deidara', 32000, NULL),
-(16, 1, 'Sasori', 32000, NULL),
-(17, 1, 'Hidan', 30000, NULL),
-(18, 1, 'Kakuzu', 32000, NULL),
-(19, 1, 'Pain', 45000, NULL),
-(20, 1, 'Konan', 30000, NULL),
-(21, 1, 'Gaara', 35000, NULL),
-(22, 1, 'Kankuro', 22000, NULL),
-(23, 1, 'Temari', 25000, NULL),
-(24, 1, 'Chiyo', 25000, NULL),
-(25, 1, 'Shikamaru', 32000, NULL),
-(26, 1, 'Neji', 30000, NULL),
-(27, 1, 'Gai', 40000, NULL),
-(28, 1, 'Lee', 28000, NULL),
-(29, 1, 'Kiba', 20000, NULL),
-(30, 1, 'Shino', 22000, NULL),
-(31, 1, 'Choji', 22000, NULL),
-(32, 1, 'Ino', 20000, NULL),
-(33, 1, 'Suigetsu', 25000, NULL),
-(34, 1, 'Karin', 20000, NULL),
-(35, 1, 'Jugo', 24000, NULL),
-(36, 1, 'Kimimaro', 30000, NULL),
-(37, 1, 'Zabuza', 28000, NULL),
-(38, 1, 'Haku', 25000, NULL),
-(39, 1, 'Ay', 42000, NULL),
-(40, 1, 'Bee', 40000, NULL),
-(41, 1, 'Darui', 30000, NULL),
-(42, 1, 'Omoi', 20000, NULL),
-(43, 1, 'Onoki', 38000, NULL),
-(44, 1, 'Kurotsuchi', 25000, NULL),
-(45, 1, 'Mei', 35000, NULL),
-(46, 1, 'Chojuro', 24000, NULL),
-(47, 1, 'Yugito', 28000, NULL),
-(48, 1, 'Yagura', 32000, NULL),
-(49, 1, 'Danzo', 35000, NULL),
-(50, 1, 'Sai', 25000, NULL),
-(51, 1, 'Kabuto', 38000, NULL),
-(52, 1, 'Anko', 22000, NULL),
-(53, 1, 'Hiruzen', 38000, NULL),
-(54, 1, 'Asuma', 28000, NULL),
-(55, 1, 'Kaguya', 50000, NULL),
-(56, 1, 'Hagoromo', 50000, NULL),
-(57, 1, 'Gamabunta', 30000, NULL),
-(58, 1, 'Gamaken', 25000, NULL),
-(59, 1, 'Manda', 30000, NULL),
-(60, 1, 'Aoda', 25000, NULL),
-(61, 1, 'Katsuyu', 30000, NULL),
-(62, 1, 'Pakkun', 15000, NULL),
-(63, 1, 'Enma', 28000, NULL),
-(64, 1, 'Ningame', 15000, NULL),
-(65, 1, 'Kurama', 50000, NULL),
-(66, 1, 'Gyuki', 45000, NULL),
-(67, 1, 'Shukaku', 40000, NULL),
-(68, 1, 'Isobu', 35000, NULL),
-(69, 1, 'Samehada', 25000, NULL),
-(70, 1, 'Tonton', 10000, NULL),
-(71, 2, 'Luffy', 50000, NULL),
-(72, 2, 'Zoro', 45000, NULL),
-(73, 2, 'Sanji', 40000, NULL),
-(74, 2, 'Nami', 30000, NULL),
-(75, 2, 'Usopp', 25000, NULL),
-(76, 2, 'Robin', 32000, NULL),
-(77, 2, 'Franky', 28000, NULL),
-(78, 2, 'Brook', 26000, NULL),
-(79, 2, 'Jinbe', 38000, NULL),
-(80, 2, 'Chopper', 15000, NULL),
-(81, 2, 'Ace', 42000, NULL),
-(82, 2, 'Sabo', 42000, NULL),
-(83, 2, 'Law', 45000, NULL),
-(84, 2, 'Kid', 42000, NULL),
-(85, 2, 'Oden', 48000, NULL),
-(86, 2, 'Yamato', 42000, NULL),
-(87, 2, 'Momonosuke', 25000, NULL),
-(88, 2, 'Kinemon', 28000, NULL),
-(89, 2, 'Vegapunk', 48000, NULL),
-(90, 2, 'Lilith', 30000, NULL),
-(91, 2, 'Dorry', 35000, NULL),
-(92, 2, 'Broggy', 35000, NULL),
-(93, 2, 'Shanks', 50000, NULL),
-(94, 2, 'Rayleigh', 48000, NULL),
-(95, 2, 'Roger', 50000, NULL),
-(96, 2, 'Barbe Blanche', 50000, NULL),
-(97, 2, 'Garp', 48000, NULL),
-(98, 2, 'Sengoku', 45000, NULL),
-(99, 2, 'Aokiji', 45000, NULL),
-(100, 2, 'Akainu', 48000, NULL),
-(101, 2, 'Kizaru', 42000, NULL),
-(102, 2, 'Fujitora', 42000, NULL),
-(103, 2, 'Kaido', 50000, NULL),
-(104, 2, 'Big Mom', 48000, NULL),
-(105, 2, 'Barbe Noire', 48000, NULL),
-(106, 2, 'Buggy', 20000, NULL),
-(107, 2, 'Mihawk', 48000, NULL),
-(108, 2, 'Doflamingo', 40000, NULL),
-(109, 2, 'Hancock', 38000, NULL),
-(110, 2, 'Kuma', 38000, NULL),
-(111, 2, 'Crocodile', 35000, NULL),
-(112, 2, 'Moria', 28000, NULL),
-(113, 2, 'Dragon', 48000, NULL),
-(114, 2, 'Ivankov', 30000, NULL),
-(115, 2, 'King', 42000, NULL),
-(116, 2, 'Queen', 40000, NULL),
-(117, 2, 'Katakuri', 48000, NULL),
-(118, 2, 'Perospero', 32000, NULL),
-(119, 2, 'Inuarashi', 35000, NULL),
-(120, 2, 'Nekomamushi', 35000, NULL),
-(121, 2, 'Carrot', 25000, NULL),
-(122, 2, 'Pedro', 28000, NULL),
-(123, 2, 'Kyros', 32000, NULL),
-(124, 2, 'Bartolomeo', 30000, NULL),
-(125, 2, 'Caesar', 32000, NULL),
-(126, 2, 'Vergo', 32000, NULL),
-(127, 2, 'Shirahoshi', 35000, NULL),
-(128, 2, 'Arlong', 22000, NULL),
-(129, 2, 'Killer', 28000, NULL),
-(130, 2, 'Bepo', 18000, NULL),
-(131, 2, 'Perona', 28000, NULL),
-(132, 2, 'Ryuma', 40000, NULL),
-(133, 2, 'Lucci', 38000, NULL),
-(134, 2, 'Kaku', 30000, NULL),
-(135, 2, 'Ener', 38000, NULL),
-(136, 2, 'Wiper', 25000, NULL),
-(137, 2, 'Vivi', 20000, NULL),
-(138, 2, 'Bon Clay', 28000, NULL),
-(139, 2, 'Koby', 30000, NULL),
-(140, 2, 'Smoker', 32000, NULL),
-(141, 2, 'Magellan', 38000, NULL),
-(142, 2, 'Shiryu', 38000, NULL),
-(143, 2, 'Beckman', 42000, NULL),
-(144, 2, 'Roux', 30000, NULL),
-(145, 2, 'Marco', 42000, NULL),
-(146, 2, 'Vista', 32000, NULL),
-(147, 2, 'Saturn', 50000, NULL),
-(148, 2, 'Imu', 50000, NULL),
-(149, 2, 'Ulti', 30000, NULL),
-(150, 2, 'Page One', 28000, NULL),
-(151, 2, 'Denjiro', 28000, NULL),
-(152, 2, 'Izo', 30000, NULL),
-(153, 2, 'Cavendish', 30000, NULL),
-(154, 2, 'Monet', 25000, NULL),
-(155, 2, 'Zeff', 28000, NULL),
-(156, 2, 'Kuro', 22000, NULL),
-(157, 2, 'Laboon', 20000, NULL),
-(158, 2, 'Zunesha', 45000, NULL);
+(1, 1, 'Naruto', 45000, 'naruto.webp'),
+(2, 1, 'Sasuke', 45000, 'sasuke.webp'),
+(3, 1, 'Itachi', 50000, 'Itachi.webp'),
+(4, 1, 'Shisui', 42000, 'shisui.webp'),
+(5, 1, 'Jiraya', 38000, 'Jiraya.webp'),
+(6, 1, 'Orochimaru', 40000, 'Orochimaru.webp'),
+(7, 1, 'Tsunade', 38000, 'Tsunade.webp'),
+(8, 1, 'Sakura', 28000, 'sakura.webp'),
+(9, 1, 'Kakashi', 42000, 'Kakashi.webp'),
+(10, 1, 'Obito', 45000, 'Obito.webp'),
+(11, 1, 'Hashirama', 50000, 'Hashirama.webp'),
+(12, 1, 'Madara', 50000, 'Madara.webp'),
+(13, 1, 'Minato', 48000, 'Minato.webp'),
+(14, 1, 'Tobirama', 45000, 'Tobirama.webp'),
+(15, 1, 'Deidara', 32000, 'Deidara.webp'),
+(16, 1, 'Sasori', 32000, 'Sasori.webp'),
+(17, 1, 'Hidan', 30000, 'Hidan.webp'),
+(18, 1, 'Kakuzu', 32000, 'Kakuzu.webp'),
+(19, 1, 'Pain', 45000, 'Pain.webp'),
+(20, 1, 'Konan', 30000, 'Konan.webp'),
+(21, 1, 'Gaara', 35000, 'Gaara.webp'),
+(22, 1, 'Kankuro', 22000, 'Kankuro.webp'),
+(23, 1, 'Temari', 25000, 'Temari.webp'),
+(24, 1, 'Chiyo', 25000, 'Chiyo.webp'),
+(25, 1, 'Shikamaru', 32000, 'Shikamaru.webp'),
+(26, 1, 'Neji', 30000, 'Neji.webp'),
+(27, 1, 'Gai', 40000, 'Gai.webp'),
+(28, 1, 'Lee', 28000, 'Rocklee.webp'),
+(29, 1, 'Kiba', 20000, 'Kiba.webp'),
+(30, 1, 'Shino', 22000, 'Shino.webp'),
+(31, 1, 'Choji', 22000, 'Choji.webp'),
+(32, 1, 'Ino', 20000, 'Ino.webp'),
+(33, 1, 'Suigetsu', 25000, 'Suigetsu.webp'),
+(34, 1, 'Karin', 20000, 'Karin.webp'),
+(35, 1, 'Jugo', 24000, 'Jugo.webp'),
+(36, 1, 'Kimimaro', 30000, 'Kimimaro.webp'),
+(37, 1, 'Zabuza', 28000, 'Zabuza.webp'),
+(38, 1, 'Haku', 25000, 'Haku.webp'),
+(39, 1, 'Ay', 42000, 'Ay.webp'),
+(40, 1, 'Bee', 40000, 'killerbee.webp'),
+(41, 1, 'Darui', 30000, 'Darui.webp'),
+(42, 1, 'Omoi', 20000, 'Omoi.webp'),
+(43, 1, 'Onoki', 38000, 'Onoki.webp'),
+(44, 1, 'Kurotsuchi', 25000, 'kurotsuchi.webp'),
+(45, 1, 'Mei', 35000, 'Mei.webp'),
+(46, 1, 'Chojuro', 24000, 'Chojuro.webp'),
+(47, 1, 'Yugito', 28000, 'Yugito.webp'),
+(48, 1, 'Yagura', 32000, 'Yagura.webp'),
+(49, 1, 'Danzo', 35000, 'Danzo.webp'),
+(50, 1, 'Sai', 25000, 'Sai.webp'),
+(51, 1, 'Kabuto', 38000, 'Kabuto.webp'),
+(52, 1, 'Anko', 22000, 'Anko.webp'),
+(53, 1, 'Hiruzen', 38000, 'Hiruzen.webp'),
+(54, 1, 'Asuma', 28000, 'Asuma.webp'),
+(55, 1, 'Kaguya', 50000, 'Kaguya.webp'),
+(56, 1, 'Hagoromo', 50000, 'Hagoromo.webp'),
+(57, 1, 'Gamabunta', 30000, 'Gamabunta.webp'),
+(58, 1, 'Gamaken', 25000, 'Gamaken.webp'),
+(59, 1, 'Manda', 30000, 'Manda.webp'),
+(60, 1, 'Aoda', 25000, 'Aoda.webp'),
+(61, 1, 'Katsuyu', 30000, 'Katsuyu.webp'),
+(62, 1, 'Pakkun', 15000, 'Pakkun.webp'),
+(63, 1, 'Enma', 28000, 'Enma.webp'),
+(64, 1, 'Ningame', 15000, 'Ningame.webp'),
+(65, 1, 'Kurama', 50000, 'Kurama.webp'),
+(66, 1, 'Gyuki', 45000, 'Gyuki.webp'),
+(67, 1, 'Shukaku', 40000, 'Shukaku.webp'),
+(68, 1, 'Isobu', 35000, 'Isobu.webp'),
+(69, 1, 'Samehada', 25000, 'Samehada.webp'),
+(70, 1, 'Tonton', 10000, 'Tonton.webp'),
+(71, 2, 'Luffy', 50000, 'Luffy.webp'),
+(72, 2, 'Zoro', 45000, 'Zoro.webp'),
+(73, 2, 'Sanji', 40000, 'Sanji.webp'),
+(74, 2, 'Nami', 30000, 'Nami.webp'),
+(75, 2, 'Usopp', 25000, 'Usopp.webp'),
+(76, 2, 'Robin', 32000, 'Robin.webp'),
+(77, 2, 'Franky', 28000, 'Franky.webp'),
+(78, 2, 'Brook', 26000, 'Brook.webp'),
+(79, 2, 'Jinbe', 38000, 'Jinbe.webp'),
+(80, 2, 'Chopper', 15000, 'Chopper.webp'),
+(81, 2, 'Ace', 42000, 'Ace.webp'),
+(82, 2, 'Sabo', 42000, 'Sabo.webp'),
+(83, 2, 'Law', 45000, 'Law.webp'),
+(84, 2, 'Kid', 42000, 'Kid.webp'),
+(85, 2, 'Oden', 48000, 'Oden.webp'),
+(86, 2, 'Yamato', 42000, 'Yamato.webp'),
+(87, 2, 'Momonosuke', 25000, 'Momonosuke.webp'),
+(88, 2, 'Kinemon', 28000, 'Kinemon.webp'),
+(89, 2, 'Vegapunk', 48000, 'Vegapunk.webp'),
+(90, 2, 'Lilith', 30000, 'Lilith.webp'),
+(91, 2, 'Dorry', 35000, 'Dorry.webp'),
+(92, 2, 'Broggy', 35000, 'Broggy.webp'),
+(93, 2, 'Shanks', 50000, 'shanks.webp'),
+(94, 2, 'Rayleigh', 48000, 'Rayleigh.webp'),
+(95, 2, 'Roger', 50000, 'Roger.webp'),
+(96, 2, 'Barbe Blanche', 50000, 'BarbeBlanche.webp'),
+(97, 2, 'Garp', 48000, 'Garp.webp'),
+(98, 2, 'Sengoku', 45000, 'Sengoku.webp'),
+(99, 2, 'Aokiji', 45000, 'Aokiji.webp'),
+(100, 2, 'Akainu', 48000, 'Akainu.webp'),
+(101, 2, 'Kizaru', 42000, 'Kizaru.webp'),
+(102, 2, 'Fujitora', 42000, 'Fujitora.webp'),
+(103, 2, 'Kaido', 50000, 'Kaido.webp'),
+(104, 2, 'Big Mom', 48000, 'BigMom.webp'),
+(105, 2, 'Barbe Noire', 48000, 'BarbeNoire.webp'),
+(106, 2, 'Buggy', 20000, 'Buggy.webp'),
+(107, 2, 'Mihawk', 48000, 'Mihawk.webp'),
+(108, 2, 'Doflamingo', 40000, 'Doflamingo.webp'),
+(109, 2, 'Hancock', 38000, 'Hancock.webp'),
+(110, 2, 'Kuma', 38000, 'Kuma.webp'),
+(111, 2, 'Crocodile', 35000, 'Crocodile.webp'),
+(112, 2, 'Moria', 28000, 'Moria.webp'),
+(113, 2, 'Dragon', 48000, 'Dragon.webp'),
+(114, 2, 'Ivankov', 30000, 'Ivankov.webp'),
+(115, 2, 'King', 42000, 'King.webp'),
+(116, 2, 'Queen', 40000, 'Queen.webp'),
+(117, 2, 'Katakuri', 48000, 'Katakuri.webp'),
+(118, 2, 'Perospero', 32000, 'Perospero.webp'),
+(119, 2, 'Inuarashi', 35000, 'Inuarashi.webp'),
+(120, 2, 'Nekomamushi', 35000, 'Nekomamush.webp'),
+(121, 2, 'Carrot', 25000, 'Carrot.webp'),
+(122, 2, 'Pedro', 28000, 'Pedro.webp'),
+(123, 2, 'Kyros', 32000, 'Kyros.webp'),
+(124, 2, 'Bartolomeo', 30000, 'Bartolomeo.webp'),
+(125, 2, 'Caesar', 32000, 'Caesar.webp'),
+(126, 2, 'Vergo', 32000, 'Vergo.webp'),
+(127, 2, 'Shirahoshi', 35000, 'Shirahoshi.webp'),
+(128, 2, 'Arlong', 22000, 'Arlong.webp'),
+(129, 2, 'Killer', 28000, 'Killer.webp'),
+(130, 2, 'Bepo', 18000, 'Bepo.webp'),
+(131, 2, 'Perona', 28000, 'Perona.webp'),
+(132, 2, 'Ryuma', 40000, 'Ryuma.webp'),
+(133, 2, 'Lucci', 38000, 'Lucci.webp'),
+(134, 2, 'Kaku', 30000, 'Kaku.webp'),
+(135, 2, 'Ener', 38000, 'Ener.webp'),
+(136, 2, 'Wiper', 25000, 'Wiper.webp'),
+(137, 2, 'Vivi', 20000, 'Vivi.webp'),
+(138, 2, 'Bon Clay', 28000, 'BonClay.webp'),
+(139, 2, 'Koby', 30000, 'Koby.webp'),
+(140, 2, 'Smoker', 32000, 'Smoker.webp'),
+(141, 2, 'Magellan', 38000, 'Magellan.webp'),
+(142, 2, 'Shiryu', 38000, 'Shiryu.webp'),
+(143, 2, 'Beckman', 42000, 'Beckman.webp'),
+(144, 2, 'Roux', 30000, 'Roux.webp'),
+(145, 2, 'Marco', 42000, 'Marco.webp'),
+(146, 2, 'Vista', 32000, 'Vista.webp'),
+(147, 2, 'Saturn', 50000, 'Saturn.webp'),
+(148, 2, 'Imu', 50000, 'Imu.webp'),
+(149, 2, 'Ulti', 30000, 'Ulti.webp'),
+(150, 2, 'Page One', 28000, 'PageOne.webp'),
+(151, 2, 'Denjiro', 28000, 'Denjiro.webp'),
+(152, 2, 'Izo', 30000, 'Izo.webp'),
+(153, 2, 'Cavendish', 30000, 'Cavendish.webp'),
+(154, 2, 'Monet', 25000, 'Monet.webp'),
+(155, 2, 'Zeff', 28000, 'Zeff.webp'),
+(156, 2, 'Kuro', 22000, 'Kuro.webp'),
+(157, 2, 'Laboon', 20000, 'Laboon.webp'),
+(158, 2, 'Zunesha', 45000, 'Zunesha.webp');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `rate_limits`
+--
+
+DROP TABLE IF EXISTS `rate_limits`;
+CREATE TABLE IF NOT EXISTS `rate_limits` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `ip_address` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `action_key` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `attempts` int DEFAULT '1',
+  `first_attempt` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `ip_action` (`ip_address`,`action_key`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `rate_limits`
+--
+
+INSERT INTO `rate_limits` (`id`, `ip_address`, `action_key`, `attempts`, `first_attempt`) VALUES
+(2, '::1', 'login_attempt', 1, '2026-10-20 12:41:15');
 
 -- --------------------------------------------------------
 
@@ -533,17 +533,19 @@ CREATE TABLE IF NOT EXISTS `utilisateur` (
   `date_naissance` date NOT NULL,
   `mot_de_passe` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `avatar` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'avatar1.jpg',
+  `tentatives_echecs` int DEFAULT '0',
+  `bloque_jusqua` datetime DEFAULT NULL,
+  `compte_suspendu` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `pseudo` (`pseudo`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `utilisateur`
 --
 
-INSERT INTO `utilisateur` (`id`, `pseudo`, `email`, `nom`, `prenom`, `date_naissance`, `mot_de_passe`, `avatar`) VALUES
-(1, 'hedgegane', '', '', '', '0000-00-00', '$2y$10$W17BLvsHix3ASkBfm8n8m.7FPb4o9kVnSO9vJfntHNWBWP7sMwtlq', 'avatar6.jpg'),
-(2, 'test', '', '', '', '0000-00-00', '$2y$10$8CKJ/1Wzxyx2R3laNSeRleb1DpGK2be1TnuPB1uL2xdL5Rd689MEq', 'avatar5.jpg');
+INSERT INTO `utilisateur` (`id`, `pseudo`, `email`, `nom`, `prenom`, `date_naissance`, `mot_de_passe`, `avatar`, `tentatives_echecs`, `bloque_jusqua`, `compte_suspendu`) VALUES
+(3, 'hedgegane', 'taleb.morgiane@hotmail.fr', 'taleb', 'morgiane', '1991-08-26', '$argon2id$v=19$m=65536,t=4,p=1$R2RSb3dQV2JzQXpHQzFxaA$2LWZnjoQ5qpNlGk1KFqFyuEMPB6dZ+64a1VZI8EZSyc', 'avatar6.jpg', 0, NULL, 0);
 
 -- --------------------------------------------------------
 
