@@ -1,13 +1,17 @@
 <?php
 // Configuration sécurisée des cookies de session AVANT le session_start()=> renfo des cookies de session
 if (session_status() === PHP_SESSION_NONE) {
+    // Détection automatique : true si HTTPS, false si HTTP (localhost)
+    $is_https = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') 
+                || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443);
+
     session_set_cookie_params([
-        'lifetime' => 7200,             // Le cookie expire dans 2 heures
+        'lifetime' => 7200,
         'path'     => '/',
-        'domain'   => '',            // Ton domaine actuel
-        'secure'   => isset($_SERVER['HTTPS']), // True si HTTPS est activé
-        'httponly' => true,          // Interdit l'accès au cookie via JavaScript (Anti-XSS)
-        'samesite' => 'Lax'          // Protection renforcée contre les attaques CSRF
+        'domain'   => '',
+        'secure'   => $is_https,
+        'httponly' => true,
+        'samesite' => 'Lax'
     ]);
     session_start();
 }

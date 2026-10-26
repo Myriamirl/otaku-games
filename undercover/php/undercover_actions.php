@@ -13,7 +13,7 @@ $csrf_token = $_POST['csrf_token'] ?? '';
 
 // Contrôle de sécurité Anti-CSRF
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !verify_csrf_token($csrf_token)) {
-    header('Location: ../pages/undercover.php?erreur=Session+expir%C3%A9e');
+    header('Location: ../pages/undercover.php?erreur=Session+expiree');
     exit();
 }
 
@@ -27,7 +27,7 @@ if ($action === 'creer') {
     $nb_tours      = intval($_POST['nb_tours'] ?? 3);
     $tours_vote    = intval($_POST['tours_vote'] ?? 1);
 
-    if ($nb_tours < 2 || $nb_tours > 10 || $nb_undercover < 1) {
+    if ($nb_tours < 2 || $nb_tours > 10 || $nb_undercover < 1 || $tours_vote < 1 || $tours_vote > 4) {
         header('Location: ../pages/undercover.php?erreur=Champs+invalides');
         exit();
     }
@@ -191,21 +191,43 @@ if ($action === 'indice') {
     try {
         $pdo->beginTransaction();
 
+        // Insertion de l'indice
         $stmtInsert = $pdo->prepare("INSERT INTO indice (partie_joueur_id, contenu, tour_numero) VALUES (?, ?, ?)");
         $stmtInsert->execute([$joueur['id'], $contenu, $partie['tour_actuel']]);
 
+        // Récupération des joueurs vivants
         $stmtVivants = $pdo->prepare("SELECT id FROM partie_joueur WHERE partie_id = ? AND vivant = 1 ORDER BY id ASC");
         $stmtVivants->execute([$partie['id']]);
         $vivants = $stmtVivants->fetchAll(PDO::FETCH_COLUMN);
 
         $index_actuel = array_search($joueur['id'], $vivants);
 
+        // Passer au joueur suivant
         if ($index_actuel !== false && isset($vivants[$index_actuel + 1])) {
             $prochain_joueur_id = $vivants[$index_actuel + 1];
             $pdo->prepare("UPDATE partie_undercover SET joueur_actuel_id = ? WHERE id = ?")->execute([$prochain_joueur_id, $partie['id']]);
         } else {
+            // Dernier joueur du tour de table : on vérifie si 3 indices par joueur ont été atteints
+            $stmtTotalIndicesTour = $pdo->prepare("
+                SELECT COUNT(i.id) 
+                FROM indice i 
+                JOIN partie_joueur pj ON i.partie_joueur_id = pj.id 
+                WHERE pj.partie_id = ? AND i.tour_numero = ?
+            ");
+            $stmtTotalIndicesTour->execute([$partie['id'], $partie['tour_actuel']]);
+            $total_indices_tour = (int)$stmtTotalIndicesTour->fetchColumn();
+
+            $indices_total_attendus = count($vivants) * 3;
+
             $premier_joueur_id = $vivants[0];
-            $pdo->prepare("UPDATE partie_undercover SET tour_actuel = tour_actuel + 1, joueur_actuel_id = ? WHERE id = ?")->execute([$premier_joueur_id, $partie['id']]);
+
+            if ($total_indices_tour >= $indices_total_attendus) {
+                // Les 3 indices par joueur sont donnés -> passage au tour suivant
+                $pdo->prepare("UPDATE partie_undercover SET tour_actuel = tour_actuel + 1, joueur_actuel_id = ? WHERE id = ?")->execute([$premier_joueur_id, $partie['id']]);
+            } else {
+                // Sinon -> on repart au 1er joueur pour la passe d'indice suivante
+                $pdo->prepare("UPDATE partie_undercover SET joueur_actuel_id = ? WHERE id = ?")->execute([$premier_joueur_id, $partie['id']]);
+            }
         }
 
         $pdo->commit();
