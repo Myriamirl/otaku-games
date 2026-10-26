@@ -2,7 +2,7 @@
 // Configuration sécurisée des cookies de session AVANT le session_start()=> renfo des cookies de session
 if (session_status() === PHP_SESSION_NONE) {
     session_set_cookie_params([
-        'lifetime' => 0,             // Le cookie expire à la fermeture du navigateur
+        'lifetime' => 7200,             // Le cookie expire dans 2 heures
         'path'     => '/',
         'domain'   => '',            // Ton domaine actuel
         'secure'   => isset($_SERVER['HTTPS']), // True si HTTPS est activé
@@ -26,8 +26,8 @@ function generate_csrf_token(): string {
 /**
  * Vérifie l'authenticité du Token CSRF
  */
-function verify_csrf_token(?string $token): bool {
-    if (empty($_SESSION['csrf_token']) || empty($token)) {
+function verify_csrf_token($token) {
+    if (!isset($_SESSION['csrf_token']) || empty($token)) {
         return false;
     }
     return hash_equals($_SESSION['csrf_token'], $token);

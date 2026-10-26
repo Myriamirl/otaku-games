@@ -347,10 +347,16 @@ setInterval(() => {
     fetch(`undercover.php?code=${encodeURIComponent(gameData.code)}&action=check_statut`)
         .then(res => res.json())
         .then(data => {
-            if (data.statut !== gameData.statut || data.joueur_actuel_id != gameData.joueur || data.tour_actuel != gameData.tour) {
+            // Comparaison stricte convertie en chaîne pour éviter tout bug de type null/empty
+            const statutChange = String(data.statut) !== String(gameData.statut);
+            const joueurChange = String(data.joueur_actuel_id ?? '') !== String(gameData.joueur ?? '');
+            const tourChange   = String(data.tour_actuel ?? '') !== String(gameData.tour ?? '');
+
+            if (statutChange || joueurChange || tourChange) {
                 window.location.reload();
             }
-        });
+        })
+        .catch(err => console.error("Erreur polling:", err));
 }, 2500);
 </script>
 <?php endif; ?>
